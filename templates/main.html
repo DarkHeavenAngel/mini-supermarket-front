@@ -1,0 +1,46 @@
+{% extends 'layout.html' %}
+
+{% block title %}Головна панель | Злагода{% endblock %}
+
+{% block content %}
+<div class="dashboard">
+    <div class="dashboard-header">
+        <h1>Вітаємо у системі, Іване!</h1>
+        <p id="current-date" class="date-display"></p>
+    </div>
+
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon" style="background-color: var(--color-muted-green);"><i class="fa-solid fa-check-to-slot"></i></div>
+            <div class="stat-info">
+                <h3>Чеки за сьогодні</h3>
+                <p class="stat-value">42</p>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon" style="background-color: var(--color-gold);"><i class="fa-solid fa-tags"></i></div>
+            <div class="stat-info">
+                <h3>Акційні товари</h3>
+                <p class="stat-value">15</p>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon" style="background-color: var(--color-orange);"><i class="fa-solid fa-users"></i></div>
+            <div class="stat-info">
+                <h3>Активні клієнти</h3>
+                <p class="stat-value">128</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="quick-actions">
+        <h2>Швидкі дії</h2>
+        <div class="action-buttons">
+            <button class="action-btn primary"><i class="fa-solid fa-plus"></i> Створити чек</button>
+            <button class="action-btn secondary"><i class="fa-solid fa-box-open"></i> Оприходувати товар</button>
+            <button class="action-btn warning"><i class="fa-solid fa-file-invoice"></i> Звіт за день</button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
