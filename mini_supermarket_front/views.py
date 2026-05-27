@@ -6,3 +6,5 @@ def home_page(request):
 def employees_page(request):
     return render(request, "employees.html")
 
+def login_page(request):
+    return render(request, "login.html")
