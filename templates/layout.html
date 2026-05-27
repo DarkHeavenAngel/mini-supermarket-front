@@ -1,0 +1,65 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}АІС Злагода{% endblock %}</title>
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <h2><i class="fa-solid fa-basket-shopping"></i> ЗЛАГОДА</h2>
+            </div>
+            <nav class="sidebar-nav">
+                <ul class="nav-list">
+                    <li class="nav-item">
+                        <a href="{% url 'home' %}" class="nav-link active"><i class="fa-solid fa-house"></i> Головна</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link"><i class="fa-solid fa-cash-register"></i> Каса (Чеки)</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link"><i class="fa-solid fa-boxes-stacked"></i> Склад (Товари)</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'employees' %}" class="nav-link"><i class="fa-solid fa-users"></i> Персонал</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link"><i class="fa-solid fa-address-card"></i> Клієнти</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="nav-link"><i class="fa-solid fa-chart-pie"></i> Звіти</a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <header class="topbar">
+                <button class="toggle-btn" id="toggle-btn">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+                <div class="user-info">
+                    <span class="user-role">Менеджер</span>
+                    <span class="user-name">Іван Іванов</span>
+                    <a href="#" class="logout-btn"><i class="fa-solid fa-right-from-bracket"></i> Вийти</a>
+                </div>
+            </header>
+
+            <div class="content-area">
+                {% block content %}
+                {% endblock %}
+            </div>
+        </main>
+    </div>
+
+    <script src="{% static 'js/main.js' %}"></script>
+</body>
+</html>
+
