@@ -5,126 +5,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Вхід - АІС Злагода</title>
-
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+    <link rel="stylesheet" href="{% static 'css/alerts.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
-    <style>
-        /* Повноекранна обгортка з легким градієнтом оливкового кольору */
-        .login-wrapper {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            background: linear-gradient(135deg, var(--color-dark-olive) 0%, #253013 100%);
-            padding: 20px;
-        }
-
-        /* ЩЕ БІЛЬШЕ та солідніше вікно логіну */
-        .login-box {
-            background: var(--bg-white);
-            padding: 55px 50px; /* Збільшили відступи всередині вікна */
-            border-radius: 12px;
-            width: 100%;
-            max-width: 540px; /* Збільшено ширину з 480px до 540px */
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.35), 0 5px 15px rgba(0, 0, 0, 0.2);
-            border-top: 5px solid var(--color-gold);
-            transition: transform 0.3s ease;
-        }
-
-        /* Заголовок форми */
-        .login-header {
-            text-align: center;
-            margin-bottom: 40px; /* Трохи більше відступу знизу */
-        }
-
-        .login-header h2 {
-            color: var(--color-dark-olive);
-            font-size: 34px; /* Збільшили розмір логотипу */
-            font-weight: 700;
-            letter-spacing: 1px;
-        }
-
-        .login-header h2 i {
-            margin-right: 10px;
-            color: var(--color-orange);
-        }
-
-        /* Поля введення */
-        .form-group {
-            margin-bottom: 24px; /* Рівномірний відступ між полями */
-        }
-
-        .form-group label {
-            font-weight: 600;
-            margin-bottom: 8px;
-            color: var(--text-dark);
-            font-size: 14px;
-            letter-spacing: 0.3px;
-        }
-
-        .form-group input {
-            width: 100%;
-            padding: 14px 18px; /* Більш просторі інпути всередині */
-            font-size: 16px;
-            border: 1px solid #cbd5e1;
-            border-radius: 8px;
-            background-color: #fafbfa;
-            color: var(--text-dark);
-            transition: all 0.25s ease;
-            outline: none;
-        }
-
-        /* Ефект фокусу на полях */
-        .form-group input:focus {
-            border-color: var(--color-muted-green);
-            background-color: var(--bg-white);
-            box-shadow: 0 0 0 4px rgba(152, 154, 96, 0.15);
-        }
-
-        /* Кнопка з великим відступом зверху */
-        .login-btn {
-            width: 100%;
-            padding: 15px; /* Кнопка стала масивнішою та зручнішою */
-            font-size: 16px;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-            border-radius: 8px;
-            justify-content: center;
-            margin-top: 35px; /* ЗБІЛЬШЕНО ВІДСТАНЬ між паролем та кнопкою (було 10px) */
-            box-shadow: 0 4px 12px rgba(206, 123, 29, 0.3);
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .login-btn:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 6px 15px rgba(206, 123, 29, 0.4);
-        }
-
-        .login-btn:active {
-            transform: translateY(1px);
-        }
-
-        /* Повідомлення про помилку */
-        .error-message {
-            color: var(--color-rust);
-            background-color: #fdf2f0;
-            border-left: 4px solid var(--color-rust);
-            padding: 12px 15px;
-            border-radius: 6px;
-            font-size: 14px;
-            font-weight: 500;
-            margin-bottom: 25px;
-            display: none;
-            align-items: center;
-            gap: 10px;
-        }
-    </style>
 </head>
 <body>
-
     <div class="login-wrapper">
+        <div class="login-wrapper-artwork" style="--mask-url: url('{% static "img/vine.jpg" %}')"></div>
+
         <div class="login-box">
 
             <div class="login-header">
@@ -132,12 +21,12 @@
                 <p style="color: var(--text-muted); margin-top: 8px; font-size: 15px;">АІС керування супермаркетом</p>
             </div>
 
-            <div id="error-message" class="error-message">
+            <div id="error-message" class="alert alert-error" style="display: none;">
                 <i class="fa-solid fa-circle-exclamation"></i>
                 <span id="error-text">Невірний ID або пароль</span>
             </div>
 
-            <form id="login-form">
+            <form id="login-form" novalidate>
                 <div class="form-group">
                     <label for="id_employee">ID працівника</label>
                     <input type="text" id="id_employee" required placeholder="Введіть ваш табельний номер">
@@ -159,3 +48,4 @@
     <script src="{% static 'js/login.js' %}"></script>
 </body>
 </html>
+
