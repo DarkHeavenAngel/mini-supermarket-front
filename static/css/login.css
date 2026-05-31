@@ -1,0 +1,110 @@
+.login-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+    background: linear-gradient(135deg, var(--color-dark-olive) 0%, #253013 100%);
+    position: relative;
+}
+
+.login-wrapper-artwork {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+
+    background-image: var(--mask-url);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    filter: invert(1) opacity(0.12);
+    mix-blend-mode: screen;
+}
+
+/* Контейнер форми */
+.login-box {
+    background: var(--bg-white);
+    padding: 55px 50px;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 540px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.35), 0 5px 15px rgba(0, 0, 0, 0.2);
+    border-top: 5px solid var(--color-gold);
+    transition: transform 0.3s ease;
+    position: relative;
+    z-index: 1;
+}
+
+.login-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.login-header h2 {
+    color: var(--color-dark-olive);
+    font-size: 34px;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.login-header h2 i {
+    margin-right: 10px;
+    color: var(--color-orange);
+}
+
+.form-group {
+    margin-bottom: 24px;
+}
+
+.form-group label {
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: var(--text-dark);
+    font-size: 14px;
+    letter-spacing: 0.3px;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 14px 18px;
+    font-size: 16px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    background-color: #fafbfa;
+    color: var(--text-dark);
+    transition: all 0.25s ease;
+    outline: none;
+}
+
+.form-group input:focus {
+    border-color: var(--color-muted-green);
+    background-color: var(--bg-white);
+    box-shadow: 0 0 0 4px rgba(152, 154, 96, 0.15);
+}
+
+.login-btn {
+    width: 100%;
+    padding: 15px;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    border-radius: 8px;
+    justify-content: center;
+    margin-top: 35px;
+    box-shadow: 0 4px 12px rgba(206, 123, 29, 0.3);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.login-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 15px rgba(206, 123, 29, 0.4);
+}
+
+.login-btn:active {
+    transform: translateY(1px);
+}
+
