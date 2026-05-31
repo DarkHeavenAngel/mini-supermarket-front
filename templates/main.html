@@ -5,7 +5,7 @@
 {% block content %}
 <div class="dashboard">
     <div class="dashboard-header">
-        <h1 id="welcome-header">Вітаємо у системі!</h1>
+        <h1 id="welcome-header" style="display: none;"></h1>
         <p id="current-date" class="date-display"></p>
     </div>
 
@@ -14,21 +14,21 @@
             <div class="stat-icon" style="background-color: var(--color-muted-green);"><i class="fa-solid fa-check-to-slot"></i></div>
             <div class="stat-info">
                 <h3>Чеки за сьогодні</h3>
-                <p class="stat-value">42</p>
+                <p class="stat-value" id="stat-checks">0</p>
             </div>
         </div>
         <div class="stat-card">
             <div class="stat-icon" style="background-color: var(--color-gold);"><i class="fa-solid fa-tags"></i></div>
             <div class="stat-info">
                 <h3>Акційні товари</h3>
-                <p class="stat-value">15</p>
+                <p class="stat-value" id="stat-promo">0</p>
             </div>
         </div>
         <div class="stat-card">
-            <div class="stat-icon" style="background-color: var(--color-orange);"><i class="fa-solid fa-users"></i></div>
+            <div class="stat-icon" style="background-color: var(--color-orange);"><i class="fa-solid fa-address-card"></i></div>
             <div class="stat-info">
-                <h3>Активні клієнти</h3>
-                <p class="stat-value">128</p>
+                <h3>Клієнтські картки</h3>
+                <p class="stat-value" id="stat-cards">0</p>
             </div>
         </div>
     </div>

@@ -1,0 +1,65 @@
+{% extends 'layout.html' %}
+{% load static %}
+
+{% block title %}Мій профіль | Злагода{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/profile.css' %}">
+
+<div class="profile-container">
+    <div class="profile-banner">
+        <div class="profile-avatar">
+            <i class="fa-solid fa-user-tie"></i>
+        </div>
+        <div class="profile-title">
+            <h2 id="prof-name-large">Завантаження...</h2>
+            <div id="prof-role-badge"></div>
+        </div>
+    </div>
+
+    <div class="profile-grid">
+        <div class="profile-card">
+            <div class="profile-card-header">
+                <h3><i class="fa-regular fa-address-card"></i> Контактна інформація</h3>
+            </div>
+            <div class="profile-card-body">
+                <div class="info-row">
+                    <div class="info-label"><i class="fa-solid fa-hashtag"></i> ID Працівника</div>
+                    <div class="info-value" id="prof-id">-</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label"><i class="fa-solid fa-phone"></i> Телефон</div>
+                    <div class="info-value" id="prof-phone">-</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label"><i class="fa-solid fa-location-dot"></i> Адреса</div>
+                    <div class="info-value" id="prof-address">-</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="profile-card">
+            <div class="profile-card-header">
+                <h3><i class="fa-solid fa-briefcase"></i> Працевлаштування</h3>
+            </div>
+            <div class="profile-card-body">
+                <div class="info-row">
+                    <div class="info-label"><i class="fa-solid fa-money-bill-wave"></i> Заробітна плата</div>
+                    <div class="info-value" id="prof-salary">-</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label"><i class="fa-solid fa-calendar-check"></i> Початок роботи</div>
+                    <div class="info-value" id="prof-start">-</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label"><i class="fa-solid fa-cake-candles"></i> Дата народження</div>
+                    <div class="info-value" id="prof-birth">-</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="{% static 'js/profile.js' %}"></script>
+{% endblock %}
+

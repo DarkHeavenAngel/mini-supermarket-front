@@ -20,22 +20,22 @@
             <nav class="sidebar-nav">
                 <ul class="nav-list">
                     <li class="nav-item">
-                        <a href="{% url 'home' %}" class="nav-link active"><i class="fa-solid fa-house"></i> Головна</a>
+                        <a href="{% url 'home' %}" class="nav-link active"><i class="fa-solid fa-house"></i> <span>Головна</span></a>
                     </li>
                     <li class="nav-item">
-                        <a href="#" class="nav-link"><i class="fa-solid fa-cash-register"></i> Каса (Чеки)</a>
+                        <a href="#" class="nav-link"><i class="fa-solid fa-cash-register"></i> <span>Каса (Чеки)</span></a>
                     </li>
                     <li class="nav-item">
-                        <a href="#" class="nav-link"><i class="fa-solid fa-boxes-stacked"></i> Склад (Товари)</a>
+                        <a href="#" class="nav-link"><i class="fa-solid fa-boxes-stacked"></i> <span>Склад (Товари)</span></a>
                     </li>
                     <li class="nav-item">
-                        <a href="{% url 'employees' %}" class="nav-link"><i class="fa-solid fa-users"></i> Персонал</a>
+                        <a href="{% url 'employees' %}" class="nav-link"><i class="fa-solid fa-users"></i> <span>Персонал</span></a>
                     </li>
                     <li class="nav-item">
-                        <a href="#" class="nav-link"><i class="fa-solid fa-address-card"></i> Клієнти</a>
+                        <a href="#" class="nav-link"><i class="fa-solid fa-address-card"></i> <span>Клієнти</span></a>
                     </li>
                     <li class="nav-item">
-                        <a href="#" class="nav-link"><i class="fa-solid fa-chart-pie"></i> Звіти</a>
+                        <a href="#" class="nav-link"><i class="fa-solid fa-chart-pie"></i> <span>Звіти</span></a>
                     </li>
                 </ul>
             </nav>
@@ -48,13 +48,9 @@
                 </button>
 
                 <div class="user-info" id="user-info-container">
-                    <span class="user-role" id="user-role-badge">...</span>
-                    <span class="user-name" id="user-name-display">Завантаження...</span>
-
                     <a href="/profile/" class="action-btn secondary" style="text-decoration: none; padding: 8px 15px; font-size: 14px;">
                         <i class="fa-solid fa-user"></i> Профіль
                     </a>
-
                     <a href="#" id="logout-btn" class="logout-btn">
                         <i class="fa-solid fa-right-from-bracket"></i> Вийти
                     </a>
@@ -68,6 +64,18 @@
             </div>
         </main>
     </div>
+    <div id="logout-modal" class="modal-overlay hidden">
+    <div class="modal-box logout-modal-box">
+        <div class="modal-header logout-modal-header">
+            <h2><i class="fa-solid fa-right-from-bracket"></i> Вихід з системи</h2>
+        </div>
+        <p class="logout-modal-text">Ви дійсно хочете завершити поточний сеанс?</p>
+        <div class="logout-modal-actions">
+            <button type="button" id="btn-cancel-logout" class="action-btn secondary">Скасувати</button>
+            <button type="button" id="btn-confirm-logout" class="action-btn warning">Вийти</button>
+        </div>
+    </div>
+</div>
     <script src="{% static 'js/api.js' %}"></script>
     <script src="{% static 'js/main.js' %}"></script>
 </body>

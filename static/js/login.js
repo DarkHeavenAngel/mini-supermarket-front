@@ -32,7 +32,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (response.ok) {
                     localStorage.setItem('access_token', data.access);
                     localStorage.setItem('refresh_token', data.refresh);
-                    window.location.href = '/';
+
+                    window.location.href = '/?login=success';
                 } else {
                     errorText.textContent = data.detail || 'Невірний ID або пароль';
                     errorBox.style.display = 'flex';
