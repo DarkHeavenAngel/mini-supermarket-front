@@ -46,11 +46,20 @@
                 <button class="toggle-btn" id="toggle-btn">
                     <i class="fa-solid fa-bars"></i>
                 </button>
-                <div class="user-info">
-                    <span class="user-role">Менеджер</span>
-                    <span class="user-name">Іван Іванов</span>
-                    <a href="#" class="logout-btn"><i class="fa-solid fa-right-from-bracket"></i> Вийти</a>
+
+                <div class="user-info" id="user-info-container">
+                    <span class="user-role" id="user-role-badge">...</span>
+                    <span class="user-name" id="user-name-display">Завантаження...</span>
+
+                    <a href="/profile/" class="action-btn secondary" style="text-decoration: none; padding: 8px 15px; font-size: 14px;">
+                        <i class="fa-solid fa-user"></i> Профіль
+                    </a>
+
+                    <a href="#" id="logout-btn" class="logout-btn">
+                        <i class="fa-solid fa-right-from-bracket"></i> Вийти
+                    </a>
                 </div>
+
             </header>
 
             <div class="content-area">
