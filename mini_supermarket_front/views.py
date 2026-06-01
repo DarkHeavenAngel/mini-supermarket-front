@@ -8,3 +8,7 @@ def employees_page(request):
 
 def login_page(request):
     return render(request, "login.html")
+
+def profile_page(request):
+    return render(request, 'profile.html')
+
