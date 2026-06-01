@@ -9,7 +9,24 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Відображення дати
+    // Випадаюче підменю "Склад"
+    const inventoryToggle = document.getElementById('inventory-toggle');
+    const inventorySubmenu = document.getElementById('inventory-submenu');
+
+    if (inventoryToggle && inventorySubmenu) {
+        inventoryToggle.addEventListener('click', (e) => {
+            e.preventDefault();
+
+            if (sidebar.classList.contains('collapsed')) {
+                sidebar.classList.remove('collapsed');
+            }
+
+            inventorySubmenu.classList.toggle('active');
+            inventoryToggle.parentElement.classList.toggle('open');
+        });
+    }
+
+    // Відображення поточної дати
     const dateDisplay = document.getElementById('current-date');
     if (dateDisplay) {
         const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
@@ -19,7 +36,6 @@ document.addEventListener('DOMContentLoaded', () => {
         dateDisplay.textContent = dateString;
     }
 
-    // Перевірка авторизації та захист
     const logoutBtn = document.getElementById('logout-btn');
     const welcomeHeader = document.getElementById('welcome-header');
     const token = localStorage.getItem('access_token');
@@ -27,6 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const handleLogout = () => {
         localStorage.removeItem('access_token');
         localStorage.removeItem('refresh_token');
+        localStorage.removeItem('empl_role');
         window.location.href = '/login/';
     };
 
@@ -35,7 +52,6 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
 
-    // Вітання
     fetch('http://127.0.0.1:8001/api/profile/', {
         method: 'GET',
         headers: {
@@ -50,6 +66,10 @@ document.addEventListener('DOMContentLoaded', () => {
         return response.json();
     })
     .then(data => {
+        localStorage.setItem('empl_role', data.empl_role);
+        document.documentElement.setAttribute('data-role', data.empl_role);
+
+        // Привітання
         if (welcomeHeader) {
             const urlParams = new URLSearchParams(window.location.search);
             if (urlParams.get('login') === 'success') {
@@ -67,7 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
         handleLogout();
     });
 
-    // Отримання та відображення статистики
+    // Статистика
     fetch('http://127.0.0.1:8001/api/dashboard/stats/', {
         method: 'GET',
         headers: {

@@ -33,6 +33,23 @@ document.addEventListener('DOMContentLoaded', () => {
                     localStorage.setItem('access_token', data.access);
                     localStorage.setItem('refresh_token', data.refresh);
 
+                    try {
+                        const profileRes = await fetch('http://127.0.0.1:8001/api/profile/', {
+                            method: 'GET',
+                            headers: {
+                                'Authorization': `Bearer ${data.access}`,
+                                'Content-Type': 'application/json'
+                            }
+                        });
+
+                        if (profileRes.ok) {
+                            const profileData = await profileRes.json();
+                            localStorage.setItem('empl_role', profileData.empl_role);
+                        }
+                    } catch (err) {
+                        console.error('Не вдалося завантажити профіль при логіні:', err);
+                    }
+
                     window.location.href = '/?login=success';
                 } else {
                     errorText.textContent = data.detail || 'Невірний ID або пароль';

@@ -8,8 +8,9 @@
 
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <link rel="stylesheet" href="{% static 'css/alerts.css' %}">
-
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script src="{% static 'js/permissions.js' %}"></script>
 </head>
 <body>
     <div class="app-container">
@@ -20,22 +21,34 @@
             <nav class="sidebar-nav">
                 <ul class="nav-list">
                     <li class="nav-item">
-                        <a href="{% url 'home' %}" class="nav-link active"><i class="fa-solid fa-house"></i> <span>Головна</span></a>
+                        <a href="{% url 'home' %}" class="nav-link"><i class="fa-solid fa-house"></i> <span>Головна</span></a>
                     </li>
                     <li class="nav-item">
-                        <a href="#" class="nav-link"><i class="fa-solid fa-cash-register"></i> <span>Каса (Чеки)</span></a>
+                        <a href="{% url 'checks' %}" class="nav-link"><i class="fa-solid fa-cash-register"></i> <span>Каса (Чеки)</span></a>
                     </li>
-                    <li class="nav-item">
-                        <a href="#" class="nav-link"><i class="fa-solid fa-boxes-stacked"></i> <span>Склад (Товари)</span></a>
+
+                    <li class="nav-item has-submenu" id="nav-warehouse">
+                        <a href="#" class="nav-link" id="inventory-toggle">
+                            <i class="fa-solid fa-boxes-stacked"></i>
+                            <span style="display: flex; flex: 1; justify-content: space-between; align-items: center;">
+                                Склад (Товари) <i class="fa-solid fa-chevron-down submenu-arrow"></i>
+                            </span>
+                        </a>
+                        <ul class="submenu" id="inventory-submenu">
+                            <li><a href="{% url 'categories' %}">Категорії</a></li>
+                            <li><a href="{% url 'products' %}">Довідник товарів</a></li>
+                            <li><a href="{% url 'store_products' %}">Товари в магазині</a></li>
+                        </ul>
                     </li>
-                    <li class="nav-item">
+
+                    <li class="nav-item" id="nav-employees">
                         <a href="{% url 'employees' %}" class="nav-link"><i class="fa-solid fa-users"></i> <span>Персонал</span></a>
                     </li>
                     <li class="nav-item">
-                        <a href="#" class="nav-link"><i class="fa-solid fa-address-card"></i> <span>Клієнти</span></a>
+                        <a href="{% url 'customers' %}" class="nav-link"><i class="fa-solid fa-address-card"></i> <span>Клієнти</span></a>
                     </li>
-                    <li class="nav-item">
-                        <a href="#" class="nav-link"><i class="fa-solid fa-chart-pie"></i> <span>Звіти</span></a>
+                    <li class="nav-item" id="nav-reports">
+                        <a href="{% url 'reports' %}" class="nav-link"><i class="fa-solid fa-chart-pie"></i> <span>Звіти</span></a>
                     </li>
                 </ul>
             </nav>

@@ -424,3 +424,56 @@ body {
     gap: 15px;
 }
 
+html[data-role="Касир"] #nav-employees,
+html[data-role="Касир"] #nav-reports,
+html[data-role="Касир"] #btn-receive-goods,
+html[data-role="Касир"] #btn-daily-report {
+    display: none !important;
+}
+
+/* ПІДМЕНЮ СКЛАДУ */
+.submenu {
+    list-style: none;
+    background-color: rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height 0.3s ease-out;
+}
+
+.submenu.active {
+    max-height: 200px;
+}
+
+.submenu li a {
+    color: #e0e4d9;
+    text-decoration: none;
+    padding: 12px 20px 12px 50px;
+    display: block;
+    font-size: 15px;
+    transition: 0.2s;
+    border-left: 4px solid transparent;
+}
+
+.submenu li a:hover {
+    background-color: var(--color-muted-green);
+    color: var(--bg-white);
+    border-left: 4px solid var(--color-gold);
+}
+
+.submenu-arrow {
+    font-size: 12px;
+    transition: transform 0.3s;
+}
+
+.has-submenu.open .submenu-arrow {
+    transform: rotate(180deg);
+}
+
+.sidebar.collapsed .submenu {
+    display: none !important;
+}
+.sidebar.collapsed .submenu-arrow {
+    display: none;
+}
+
+
