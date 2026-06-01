@@ -93,7 +93,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     tableBody.insertAdjacentHTML('beforeend', `
                         <tr>
-                            <td><strong>${cust.card_number}</strong></td>
+                            <td>${cust.card_number}</td>
                             <td>${cust.cust_surname}</td>
                             <td>${cust.cust_name}</td>
                             <td>${patronymic}</td>
@@ -114,7 +114,19 @@ document.addEventListener('DOMContentLoaded', () => {
         editingCardId = null;
         document.getElementById('modal-title').textContent = 'Додати клієнта';
         form.reset();
-        document.getElementById('card_number').disabled = false;
+
+        // генерація ID картки
+        const idInput = document.getElementById('card_number');
+        let nextId = "0000000000001";
+
+        if (currentCustomers.length > 0) {
+            const maxId = Math.max(...currentCustomers.map(c => parseInt(c.card_number)));
+            nextId = (maxId + 1).toString().padStart(13, '0');
+        }
+
+        idInput.value = nextId;
+        idInput.disabled = true;
+
         toggleModal();
     });
 
