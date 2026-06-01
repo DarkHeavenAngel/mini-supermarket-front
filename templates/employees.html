@@ -4,6 +4,8 @@
 {% block title %}Персонал | Злагода{% endblock %}
 
 {% block content %}
+<link rel="stylesheet" href="{% static 'css/employees.css' %}">
+
 <div class="page-header">
     <h1>Управління персоналом</h1>
     <button id="btn-open-modal" class="action-btn primary">
@@ -49,10 +51,17 @@
 <div id="employee-modal" class="modal-overlay hidden">
     <div class="modal-box">
         <div class="modal-header">
-            <h2>Додати працівника</h2>
+            <h2 id="modal-title">Додати працівника</h2>
             <button id="btn-close-modal" class="close-btn"><i class="fa-solid fa-xmark"></i></button>
         </div>
-        <form id="employee-form" class="modal-form">
+
+        <form id="employee-form" class="modal-form" novalidate>
+
+            <div id="modal-error-message" class="alert alert-error" style="display: none; margin-bottom: 20px;">
+                <i class="fa-solid fa-circle-exclamation"></i>
+                <span id="modal-error-text"></span>
+            </div>
+
             <div class="form-grid">
                 <div class="form-group">
                     <label>ID Працівника *</label>
@@ -73,6 +82,14 @@
                 <div class="form-group">
                     <label>Ім'я *</label>
                     <input type="text" id="empl_name" required>
+                </div>
+                <div class="form-group">
+                    <label>По батькові</label>
+                    <input type="text" id="empl_patronymic" placeholder="Не обов'язково">
+                </div>
+                <div class="form-group" id="password-group">
+                    <label>Пароль (для входу) *</label>
+                    <input type="password" id="employee_password" placeholder="Введіть пароль">
                 </div>
                 <div class="form-group">
                     <label>Зарплата (грн) *</label>
@@ -104,6 +121,18 @@
                 <button type="submit" class="action-btn primary">Зберегти</button>
             </div>
         </form>
+    </div>
+</div>
+
+<div id="delete-modal" class="modal-overlay hidden">
+    <div class="modal-box logout-modal-box"> <div class="modal-header logout-modal-header">
+            <h2><i class="fa-solid fa-triangle-exclamation" style="color: var(--color-rust);"></i> Підтвердження</h2>
+        </div>
+        <p class="logout-modal-text" id="delete-modal-text">Ви дійсно хочете видалити працівника?</p>
+        <div class="logout-modal-actions">
+            <button type="button" id="btn-cancel-delete" class="action-btn secondary">Скасувати</button>
+            <button type="button" id="btn-confirm-delete" class="action-btn warning">Видалити</button>
+        </div>
     </div>
 </div>
 
