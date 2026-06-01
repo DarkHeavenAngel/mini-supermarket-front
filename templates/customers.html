@@ -1,0 +1,116 @@
+{% extends 'layout.html' %}
+{% load static %}
+
+{% block title %}Клієнти | Злагода{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/employees.css' %}">
+
+<style>
+    html[data-role="Касир"] .manager-only {
+        display: none !important;
+    }
+</style>
+
+<div class="page-header">
+    <h1>Клієнтські картки</h1>
+    <button id="btn-open-modal" class="action-btn primary">
+        <i class="fa-solid fa-address-card"></i> Додати клієнта
+    </button>
+</div>
+
+<div class="toolbar">
+    <div class="search-box">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" id="search-input" placeholder="Пошук за прізвищем...">
+    </div>
+</div>
+
+<div class="table-container" style="overflow-x: auto;">
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>Номер картки</th>
+                <th>Прізвище</th>
+                <th>Ім'я</th>
+                <th>По-батькові</th> <th>Телефон</th>
+                <th>Адреса</th>
+                <th>Знижка (%)</th>
+                <th>Дії</th>
+            </tr>
+        </thead>
+        <tbody id="customers-table-body">
+            <tr><td colspan="7" style="text-align: center; padding: 20px;">Завантаження даних...</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<div id="customer-modal" class="modal-overlay hidden">
+    <div class="modal-box">
+        <div class="modal-header">
+            <h2 id="modal-title">Додати клієнта</h2>
+            <button id="btn-close-modal" class="close-btn"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <form id="customer-form" class="modal-form" novalidate>
+            <div id="modal-error-message" class="alert alert-error" style="display: none; margin-bottom: 20px;">
+                <i class="fa-solid fa-circle-exclamation"></i>
+                <span id="modal-error-text"></span>
+            </div>
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Номер картки *</label>
+                    <input type="text" id="card_number" required maxlength="13">
+                </div>
+                <div class="form-group">
+                    <label>Відсоток знижки *</label>
+                    <input type="number" id="percent" required min="0" max="100">
+                </div>
+                <div class="form-group">
+                    <label>Прізвище *</label>
+                    <input type="text" id="cust_surname" required>
+                </div>
+                <div class="form-group">
+                    <label>Ім'я *</label>
+                    <input type="text" id="cust_name" required>
+                </div>
+                <div class="form-group">
+                    <label>По батькові</label>
+                    <input type="text" id="cust_patronymic">
+                </div>
+                <div class="form-group">
+                    <label>Телефон *</label>
+                    <input type="text" id="phone_number" required maxlength="13">
+                </div>
+                <div class="form-group" style="grid-column: span 2;">
+                    <label>Місто, Вулиця, Індекс *</label>
+                    <div style="display: flex; gap: 10px;">
+                        <input type="text" id="city" placeholder="Місто" required style="flex: 1;">
+                        <input type="text" id="street" placeholder="Вулиця" required style="flex: 1;">
+                        <input type="text" id="zip_code" placeholder="Індекс" maxlength="9" required style="width: 100px;">
+                    </div>
+                </div>
+            </div>
+            <div class="form-actions">
+                <button type="button" id="btn-cancel" class="action-btn secondary">Скасувати</button>
+                <button type="submit" class="action-btn primary">Зберегти</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div id="delete-modal" class="modal-overlay hidden">
+    <div class="modal-box logout-modal-box">
+        <div class="modal-header logout-modal-header">
+            <h2><i class="fa-solid fa-triangle-exclamation" style="color: var(--color-rust);"></i> Підтвердження</h2>
+        </div>
+        <p class="logout-modal-text" id="delete-modal-text">Ви дійсно хочете видалити клієнта?</p>
+        <div class="logout-modal-actions">
+            <button type="button" id="btn-cancel-delete" class="action-btn secondary">Скасувати</button>
+            <button type="button" id="btn-confirm-delete" class="action-btn warning">Видалити</button>
+        </div>
+    </div>
+</div>
+
+<script src="{% static 'js/customers.js' %}"></script>
+{% endblock %}
+
