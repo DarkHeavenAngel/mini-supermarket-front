@@ -36,9 +36,17 @@
     <div class="quick-actions">
         <h2>Швидкі дії</h2>
         <div class="action-buttons">
-            <button class="action-btn primary"><i class="fa-solid fa-plus"></i> Створити чек</button>
-            <button class="action-btn secondary"><i class="fa-solid fa-box-open"></i> Оприходувати товар</button>
-            <button class="action-btn warning"><i class="fa-solid fa-file-invoice"></i> Звіт за день</button>
+            <a href="{% url 'checks' %}" class="action-btn primary" style="text-decoration: none;">
+                <i class="fa-solid fa-plus"></i> Створити чек
+            </a>
+
+            <a href="{% url 'store_products' %}" id="btn-receive-goods" class="action-btn secondary" style="text-decoration: none;">
+                <i class="fa-solid fa-box-open"></i> Оприходувати товар
+            </a>
+
+            <a href="{% url 'reports' %}" id="btn-daily-report" class="action-btn warning" style="text-decoration: none;">
+                <i class="fa-solid fa-file-invoice"></i> Звіт за день
+            </a>
         </div>
     </div>
 </div>
