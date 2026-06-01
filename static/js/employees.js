@@ -52,6 +52,24 @@ document.addEventListener('DOMContentLoaded', () => {
         const role = roleFilter.value;
         const queryParams = new URLSearchParams({ search: search, role: role });
 
+        const formatDate = (dateString) => {
+            if (!dateString) return '-';
+            const date = new Date(dateString);
+            return date.toLocaleDateString('uk-UA');
+        };
+
+        const calculateAge = (dateString) => {
+            if (!dateString) return '';
+            const birthDate = new Date(dateString);
+            const today = new Date();
+            let age = today.getFullYear() - birthDate.getFullYear();
+            const m = today.getMonth() - birthDate.getMonth();
+            if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+                age--;
+            }
+            return age;
+        };
+
         fetch(`${API_URL}/?${queryParams.toString()}`)
             .then(response => response.json())
             .then(data => {
@@ -59,7 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 tableBody.innerHTML = '';
 
                 if (data.length === 0) {
-                    tableBody.innerHTML = '<tr><td colspan="7" style="text-align: center;">Записів не знайдено</td></tr>';
+                    tableBody.innerHTML = '<tr><td colspan="9" style="text-align: center;">Записів не знайдено</td></tr>';
                     return;
                 }
 
@@ -68,13 +86,30 @@ document.addEventListener('DOMContentLoaded', () => {
                     const patronymic = emp.empl_patronymic ? emp.empl_patronymic : '';
                     const fullName = `${emp.empl_surname} ${emp.empl_name} ${patronymic}`.trim();
 
+                    // Повна адреса
+                    const zip = emp.zip_code ? `, ${emp.zip_code}` : '';
+                    const fullAddress = `м. ${emp.city}, вул. ${emp.street}${zip}`;
+
+                    // Дата народження з віком
+                    const dobFormatted = formatDate(emp.date_of_birth);
+                    const age = calculateAge(emp.date_of_birth);
+                    const dobDisplay = emp.date_of_birth ? `${dobFormatted} (${age} р.)` : '-';
+
                     const row = `
                         <tr>
-                            <td>${emp.id_employee}</td>
+                            <td><strong>${emp.id_employee}</strong></td>
                             <td>${fullName}</td>
                             <td><span class="role-badge ${roleClass}">${emp.empl_role}</span></td>
                             <td>${emp.phone_number}</td>
-                            <td>${emp.city}</td>
+                            
+                            <td>
+                                <div class="address-wrapper" data-tooltip="${fullAddress}">
+                                    <span class="address-text">${fullAddress}</span>
+                                </div>
+                            </td>
+                            
+                            <td>${dobDisplay}</td>
+                            <td>${formatDate(emp.date_of_start)}</td>
                             <td>${parseFloat(emp.salary).toFixed(2)} ₴</td>
                             <td>
                                 <button class="icon-btn edit" onclick="openEditModal('${emp.id_employee}')" title="Редагувати"><i class="fa-solid fa-pen"></i></button>
@@ -193,7 +228,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 toggleModal();
                 loadEmployees();
             } else {
-                // Виводимо красиву помилку з бекенду всередині модального вікна
                 const errData = await response.json();
                 errorText.textContent = errData.error || errData.detail || 'Невідома помилка при збереженні';
                 errorBox.style.display = 'flex';
@@ -245,6 +279,46 @@ document.addEventListener('DOMContentLoaded', () => {
             deleteModal.classList.add('hidden');
             showGlobalAlert('Сталася помилка при видаленні', 'error');
         });
+    });
+
+    // Розширення адреси
+    const tooltipEl = document.createElement('div');
+    tooltipEl.className = 'smart-tooltip';
+    document.body.appendChild(tooltipEl);
+
+    tableBody.addEventListener('mouseover', (e) => {
+        const wrapper = e.target.closest('.address-wrapper');
+        if (!wrapper) return;
+
+        const textEl = wrapper.querySelector('.address-text');
+
+        if (textEl.scrollWidth > textEl.clientWidth) {
+            wrapper.style.cursor = 'help';
+            tooltipEl.textContent = wrapper.getAttribute('data-tooltip');
+            tooltipEl.classList.add('show');
+
+            const rect = wrapper.getBoundingClientRect();
+            const tooltipHeight = tooltipEl.offsetHeight;
+
+            let top = rect.bottom + window.scrollY + 8;
+            let left = rect.left + window.scrollX;
+
+            if (rect.bottom + tooltipHeight + 10 > window.innerHeight) {
+                top = rect.top + window.scrollY - tooltipHeight - 8;
+            }
+
+            tooltipEl.style.top = `${top}px`;
+            tooltipEl.style.left = `${left}px`;
+        } else {
+            wrapper.style.cursor = 'default';
+        }
+    });
+
+    tableBody.addEventListener('mouseout', (e) => {
+        const wrapper = e.target.closest('.address-wrapper');
+        if (wrapper) {
+            tooltipEl.classList.remove('show');
+        }
     });
 
     loadEmployees();
