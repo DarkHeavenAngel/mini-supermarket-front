@@ -389,6 +389,21 @@ document.addEventListener('DOMContentLoaded', () => {
             });
     });
 
+    document.querySelectorAll('.modal-overlay').forEach(overlay => {
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay) {
+                overlay.classList.add('hidden');
+
+                if (overlay.id === 'delete-modal') {
+                    productToDelete = null;
+                } else {
+                    if (errorBox) errorBox.style.display = 'none';
+                    if (form) form.querySelectorAll('[required]').forEach(el => el.style.borderColor = 'var(--border-color)');
+                }
+            }
+        });
+    });
+
     loadBaseProducts().then(loadStoreProducts);
 });
 

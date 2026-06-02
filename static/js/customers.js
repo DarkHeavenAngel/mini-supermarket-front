@@ -208,6 +208,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.getElementById('btn-cancel-delete').addEventListener('click', () => deleteModal.classList.add('hidden'));
 
+    document.querySelectorAll('.modal-overlay').forEach(overlay => {
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay) {
+                overlay.classList.add('hidden');
+
+                if (overlay.id === 'delete-modal') {
+                    cardToDelete = null;
+                } else {
+                    if (errorBox) errorBox.style.display = 'none';
+                    if (form) form.querySelectorAll('input').forEach(el => el.style.borderColor = 'var(--border-color)');
+                }
+            }
+        });
+    });
+
     loadCustomers();
 });
 
