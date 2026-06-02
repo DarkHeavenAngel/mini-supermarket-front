@@ -1,0 +1,109 @@
+{% extends 'layout.html' %}
+{% load static %}
+
+{% block title %}Звіти | Злагода{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/custom-select.css' %}">
+<link rel="stylesheet" href="{% static 'css/reports.css' %}">
+
+<style>
+    html[data-role="Касир"] .manager-only { display: none !important; }
+    html[data-role="Менеджер"] .cashier-denied { display: none !important; }
+</style>
+
+<div class="cashier-denied" style="text-align: center; margin-top: 100px; color: var(--color-rust, #d44000);">
+    <h2><i class="fa-solid fa-lock"></i> Доступ заборонено</h2>
+    <p>Формування звітів доступне виключно Менеджерам.</p>
+</div>
+
+<div class="manager-only">
+    <div class="page-header">
+        <h1>Формування звітів</h1>
+    </div>
+
+    <div class="report-controls">
+        <div class="report-card">
+            <h3>Звіт: Продажі товару</h3>
+            <form id="product-report-form" novalidate>
+                <div id="product-error-message" class="alert alert-error form-error" style="display: none;">
+                    <i class="fa-solid fa-circle-exclamation"></i>
+                    <span id="product-error-text"></span>
+                </div>
+
+                <div class="form-group">
+                    <label>Оберіть товар *</label>
+                    <select id="report-product-id" required>
+                        <option value="" disabled selected>Всі товари завантажуються...</option>
+                    </select>
+                </div>
+
+                <div class="date-range-group">
+                    <div class="field">
+                        <label>З дати *</label>
+                        <input type="date" id="p-date-from" required>
+                    </div>
+                    <div class="field">
+                        <label>По дату *</label>
+                        <input type="date" id="p-date-to" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="action-btn primary btn-full-width"><i class="fa-solid fa-chart-pie"></i> Згенерувати</button>
+            </form>
+        </div>
+
+        <div class="report-card">
+            <h3>Звіт: Загальна сума продажів</h3>
+            <form id="sales-report-form" novalidate>
+                <div id="sales-error-message" class="alert alert-error form-error" style="display: none;">
+                    <i class="fa-solid fa-circle-exclamation"></i>
+                    <span id="sales-error-text"></span>
+                </div>
+
+                <div class="form-group">
+                    <label>Касир (необов'язково)</label>
+                    <select id="report-cashier-id">
+                        <option value="">Всі касири</option>
+                    </select>
+                </div>
+
+                <div class="date-range-group">
+                    <div class="field">
+                        <label>З дати *</label>
+                        <input type="date" id="s-date-from" required>
+                    </div>
+                    <div class="field">
+                        <label>По дату *</label>
+                        <input type="date" id="s-date-to" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="action-btn primary btn-full-width"><i class="fa-solid fa-money-bill-trend-up"></i> Згенерувати</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="report-preview-container">
+        <button onclick="window.print()" class="action-btn secondary no-print" style="float: right; margin-bottom: 20px;">
+            <i class="fa-solid fa-print"></i> Друкувати звіт
+        </button>
+        <div style="clear: both;"></div>
+
+        <div class="print-header" id="print-report-title">
+            Міні-супермаркет ZLAGODA: Офіційний звіт
+        </div>
+
+        <div id="report-content"></div>
+
+        <div class="print-footer">
+            <div id="print-date">Дата формування: </div>
+            <div>Підпис менеджера: ___________________</div>
+        </div>
+    </div>
+</div>
+
+<script src="{% static 'js/custom-select.js' %}"></script>
+<script src="{% static 'js/reports.js' %}"></script>
+{% endblock %}
+
