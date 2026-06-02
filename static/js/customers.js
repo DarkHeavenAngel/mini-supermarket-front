@@ -77,13 +77,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 tableBody.innerHTML = '';
 
                 if (data.length === 0) {
-                    tableBody.innerHTML = '<tr><td colspan="8" style="text-align: center;">Клієнтів не знайдено</td></tr>';
+                    tableBody.innerHTML = '<tr><td colspan="6" style="text-align: center;">Клієнтів не знайдено</td></tr>';
                     return;
                 }
 
                 data.forEach(cust => {
                     const fullAddress = `м. ${cust.city}, вул. ${cust.street}, ${cust.zip_code}`;
-                    const patronymic = cust.cust_patronymic || '';
+
+                    const patronymic = cust.cust_patronymic ? cust.cust_patronymic : '';
+                    const fullName = `${cust.cust_surname} ${cust.cust_name} ${patronymic}`.trim();
 
                     let actions = `<button class="icon-btn edit" onclick="openEditModal('${cust.card_number}')" title="Редагувати"><i class="fa-solid fa-pen"></i></button>`;
 
@@ -94,11 +96,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     tableBody.insertAdjacentHTML('beforeend', `
                         <tr>
                             <td>${cust.card_number}</td>
-                            <td>${cust.cust_surname}</td>
-                            <td>${cust.cust_name}</td>
-                            <td>${patronymic}</td>
+                            <td>${fullName}</td>
                             <td>${cust.phone_number}</td>
-                            <td><div class="address-wrapper" data-tooltip="${fullAddress}"><span class="address-text">${fullAddress}</span></div></td>
+                            <td>
+                                <div class="address-wrapper" data-tooltip="${fullAddress}">
+                                    <span class="address-text">${fullAddress}</span>
+                                </div>
+                            </td>
                             <td>${cust.percent}%</td>
                             <td>${actions}</td>
                         </tr>
@@ -183,7 +187,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const deleteModal = document.getElementById('delete-modal');
     window.openDeleteModal = (id) => {
         cardToDelete = id;
-        document.getElementById('delete-modal-text').innerHTML = `Видалити картку №<strong>${id}</strong>?`;
+        const cust = currentCustomers.find(c => c.card_number == id);
+
+        let fullName = '';
+        if (cust) {
+            const patronymic = cust.cust_patronymic ? cust.cust_patronymic : '';
+            fullName = `${cust.cust_surname} ${cust.cust_name} ${patronymic}`.trim();
+        }
+        document.getElementById('delete-modal-text').innerHTML = `Ви дійсно хочете видалити клієнта <strong>«${fullName}»</strong> (картка №${id})?`;
         deleteModal.classList.remove('hidden');
     };
 
