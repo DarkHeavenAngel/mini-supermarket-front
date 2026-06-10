@@ -311,8 +311,17 @@ document.addEventListener('DOMContentLoaded', () => {
             const baseUpc = document.getElementById('upc_prom').value;
             const baseProduct = currentStoreProducts.find(p => p.upc === baseUpc);
 
-            if (baseProduct && productsNumber > baseProduct.products_number) {
-                errorText.textContent = `Увага: Кількість акційного товару (${productsNumber}) не може перевищувати залишок звичайного (${baseProduct.products_number} од.).`;
+            let maxAllowed = baseProduct ? baseProduct.products_number : 0;
+
+            if (editingUPC) {
+                const currentPromo = currentStoreProducts.find(p => p.upc === editingUPC);
+                if (currentPromo) {
+                    maxAllowed += currentPromo.products_number;
+                }
+            }
+
+            if (baseProduct && productsNumber > maxAllowed) {
+                errorText.textContent = `Увага: Кількість акційного товару (${productsNumber}) не може перевищувати загальний доступний залишок (${maxAllowed} од.).`;
                 errorBox.style.display = 'flex';
                 return;
             }
