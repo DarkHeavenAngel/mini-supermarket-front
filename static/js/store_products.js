@@ -218,6 +218,11 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('promotional_product').value = '';
             document.getElementById('id_product').value = '';
             document.getElementById('promotional_product').dispatchEvent(new Event('change'));
+            document.getElementById('write-off-toggle-group').style.display = 'none';
+            document.getElementById('write-off-qty-group').style.display = 'none';
+            document.getElementById('is_write_off').checked = false;
+            document.getElementById('products_number').readOnly = false;
+            document.getElementById('products_number').style.backgroundColor = '';
             document.querySelectorAll('.modal-form .custom-select-wrapper').forEach(wrapper => {
                 const select = wrapper.querySelector('select');
                 const triggerSpan = wrapper.querySelector('.custom-select-trigger span');
@@ -264,8 +269,44 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('selling_price').value = parseFloat(sp.selling_price).toFixed(2);
         }
 
+        isWriteOffCheckbox.checked = false;
+        writeOffQtyGroup.style.display = 'none';
+        writeOffQtyInput.value = '';
+        writeOffQtyInput.removeAttribute('required');
+        productsNumberInput.readOnly = false;
+        productsNumberInput.style.backgroundColor = '';
+
+        const writeOffToggleGroup = document.getElementById('write-off-toggle-group');
+        if (sp.promotional_product) {
+            writeOffToggleGroup.style.display = 'block';
+            writeOffQtyInput.max = sp.products_number;
+        } else {
+            writeOffToggleGroup.style.display = 'none';
+        }
+
         toggleModal();
     };
+
+    const isWriteOffCheckbox = document.getElementById('is_write_off');
+    const productsNumberInput = document.getElementById('products_number');
+    const writeOffQtyGroup = document.getElementById('write-off-qty-group');
+    const writeOffQtyInput = document.getElementById('write_off_qty');
+
+    isWriteOffCheckbox.addEventListener('change', (e) => {
+        if (e.target.checked) {
+            writeOffQtyGroup.style.display = 'block';
+            writeOffQtyInput.setAttribute('required', 'required');
+
+            productsNumberInput.readOnly = true;
+            productsNumberInput.style.backgroundColor = 'var(--bg-secondary)';
+        } else {
+            writeOffQtyGroup.style.display = 'none';
+            writeOffQtyInput.removeAttribute('required');
+
+            productsNumberInput.readOnly = false;
+            productsNumberInput.style.backgroundColor = '';
+        }
+    });
 
     form.addEventListener('submit', (e) => {
         e.preventDefault();
@@ -329,12 +370,31 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
+        const isWriteOff = isWriteOffCheckbox.checked;
+        let finalQty = parseInt(document.getElementById('products_number').value);
+
+        if (isWriteOff && editingUPC) {
+            const writeOffVal = parseInt(writeOffQtyInput.value);
+            if (isNaN(writeOffVal) || writeOffVal <= 0) {
+                errorText.textContent = "Введіть коректну кількість для списання.";
+                errorBox.style.display = 'flex';
+                return;
+            }
+            if (writeOffVal > finalQty) {
+                errorText.textContent = "Кількість для списання не може перевищувати поточний залишок акційного товару.";
+                errorBox.style.display = 'flex';
+                return;
+            }
+            finalQty = finalQty - writeOffVal;
+        }
+
         const payload = {
             id_product: document.getElementById('id_product').value,
-            products_number: document.getElementById('products_number').value,
+            products_number: finalQty,
             promotional_product: isPromo,
             selling_price: isPromo ? 0 : document.getElementById('selling_price').value,
-            upc_prom: isPromo ? document.getElementById('upc_prom').value : null
+            upc_prom: isPromo ? document.getElementById('upc_prom').value : null,
+            is_write_off: isWriteOff
         };
 
         let method = 'POST';
