@@ -72,8 +72,21 @@
 }
 
 @media print {
+    @page { margin: 0; }
+
     body * { visibility: hidden; }
-    #receipt-content, #receipt-content * { visibility: visible; }
-    #receipt-content { position: absolute; left: 0; top: 0; width: 100%; }
+    #receipt-content,
+    #receipt-content * {
+        visibility: visible;
+    }
+
+    #receipt-content {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        padding: 1cm;
+        background: white;
+    }
 }
 
