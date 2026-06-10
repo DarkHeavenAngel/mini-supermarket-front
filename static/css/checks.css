@@ -1,0 +1,79 @@
+.receipt-wrapper {
+    background: #fff;
+    padding: 20px;
+    border: 1px dashed #ccc;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    font-family: 'Courier New', Courier, monospace;
+    color: #333;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.receipt-header {
+    text-align: center;
+    border-bottom: 1px dashed #333;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+}
+
+.receipt-header h3 {
+    margin: 0 0 5px 0;
+    font-size: 18px;
+    text-transform: uppercase;
+}
+
+.receipt-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+    font-size: 14px;
+}
+
+.receipt-item-name {
+    flex: 1;
+    padding-right: 10px;
+}
+
+.receipt-divider {
+    border-top: 1px dashed #333;
+    margin: 10px 0;
+}
+
+.receipt-total {
+    font-size: 16px;
+    font-weight: bold;
+    display: flex;
+    justify-content: space-between;
+}
+
+.check-row {
+    display: grid;
+    grid-template-columns: 2fr 1fr auto;
+    gap: 10px;
+    align-items: end;
+    margin-bottom: 10px;
+    background: var(--bg-light);
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+}
+
+.remove-row-btn {
+    background: none;
+    border: none;
+    color: var(--color-rust);
+    cursor: pointer;
+    font-size: 16px;
+    padding: 10px;
+}
+
+.remove-row-btn:hover {
+    color: #a00;
+}
+
+@media print {
+    body * { visibility: hidden; }
+    #receipt-content, #receipt-content * { visibility: visible; }
+    #receipt-content { position: absolute; left: 0; top: 0; width: 100%; }
+}
+
