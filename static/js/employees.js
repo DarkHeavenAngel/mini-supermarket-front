@@ -249,7 +249,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     window.openDeleteModal = (id) => {
         employeeToDelete = id;
-        document.getElementById('delete-modal-text').innerHTML = `Ви дійсно хочете безповоротно видалити працівника з ID <strong>${id}</strong>?`;
+        const emp = currentEmployees.find(e => e.id_employee === id);
+
+        let fullName = '';
+        if (emp) {
+            const patronymic = emp.empl_patronymic ? emp.empl_patronymic : '';
+            fullName = `${emp.empl_surname} ${emp.empl_name} ${patronymic}`.trim();
+        }
+        document.getElementById('delete-modal-text').innerHTML = `Ви дійсно хочете безповоротно видалити працівника <strong>«${fullName}»</strong> (ID: ${id})?`;
         deleteModal.classList.remove('hidden');
     };
 
