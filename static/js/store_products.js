@@ -18,6 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const priceInput = document.getElementById('selling_price');
     const upcPromGroup = document.getElementById('upc-prom-group');
     const upcPromSelect = document.getElementById('upc_prom');
+    const promoFilter = document.getElementById('promo-filter');
 
     const errorBox = document.getElementById('modal-error-message');
     const errorText = document.getElementById('modal-error-text');
@@ -143,8 +144,9 @@ document.addEventListener('DOMContentLoaded', () => {
     function loadStoreProducts() {
         const search = searchInput.value.trim();
         const sort = sortFilter.value;
+        const promo = promoFilter.value;
 
-        fetch(`${API_URL}/?search=${search}&sort=${sort}`)
+        fetch(`${API_URL}/?search=${search}&sort=${sort}&promo=${promo}`)
             .then(res => res.json())
             .then(data => {
                 currentStoreProducts = data;
@@ -412,7 +414,8 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     });
-
+    promoFilter.addEventListener('change', loadStoreProducts);
+    setupCustomSelect('promo-filter');
     loadBaseProducts().then(loadStoreProducts);
 });
 

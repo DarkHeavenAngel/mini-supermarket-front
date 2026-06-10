@@ -366,4 +366,11 @@ html[data-role="Касир"] #btn-daily-report {
     display: none;
 }
 
+.th-filter .custom-select-wrapper {
+    width: 110px;
+}
+
+.th-filter .custom-select-trigger {
+    padding: 6px 10px;
+}
 
