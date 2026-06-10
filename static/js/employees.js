@@ -13,6 +13,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const errorBox = document.getElementById('modal-error-message');
     const errorText = document.getElementById('modal-error-text');
 
+    setupCustomSelect('role-filter');
+
     function showGlobalAlert(message, type = 'success') {
         let container = document.getElementById('global-alerts-container');
         if (!container) {
