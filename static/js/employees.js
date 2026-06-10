@@ -330,6 +330,17 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    document.querySelectorAll('.modal-overlay').forEach(overlay => {
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay) {
+                overlay.classList.add('hidden');
+                employeeToDelete = null;
+                if (errorBox) errorBox.style.display = 'none';
+                form.querySelectorAll('input, select').forEach(el => el.style.borderColor = 'var(--border-color)');
+            }
+        });
+    });
+
     loadEmployees();
 });
 
