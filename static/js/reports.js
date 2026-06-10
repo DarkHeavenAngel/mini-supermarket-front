@@ -180,6 +180,42 @@ document.addEventListener('DOMContentLoaded', () => {
                     </table>
                 `;
 
+                if (data.sold_products && data.sold_products.length > 0) {
+                    html += `
+                        <h4 style="margin-top: 30px; margin-bottom: 15px; border-bottom: 1px solid var(--border-color); padding-bottom: 5px;">
+                            Деталізація проданих товарів:
+                        </h4>
+                        <table class="report-table" style="font-size: 14px;">
+                            <thead>
+                                <tr>
+                                    <th>UPC</th>
+                                    <th>Назва товару</th>
+                                    <th style="text-align: center;">Продано одиниць</th>
+                                    <th style="text-align: right;">Сума з продажу (₴)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                    `;
+
+                    data.sold_products.forEach(item => {
+                        html += `
+                            <tr>
+                                <td><strong>${item.upc}</strong></td>
+                                <td>${item.product_name}</td>
+                                <td style="text-align: center;">${item.total_quantity}</td>
+                                <td style="text-align: right;">${parseFloat(item.total_product_revenue).toFixed(2)}</td>
+                            </tr>
+                        `;
+                    });
+
+                    html += `
+                            </tbody>
+                        </table>
+                    `;
+                } else if (data.total_checks_printed > 0) {
+                     html += `<p style="margin-top: 20px; color: var(--text-muted);">Немає детальної інформації по товарах.</p>`;
+                }
+
                 reportContent.innerHTML = html;
                 previewContainer.style.display = 'block';
                 previewContainer.scrollIntoView({ behavior: 'smooth' });
