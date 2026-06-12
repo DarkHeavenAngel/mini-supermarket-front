@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const API_URL = 'http://127.0.0.1:8001/api/checks';
     const PROD_URL = 'http://127.0.0.1:8001/api/store_products';
     const CARD_URL = 'http://127.0.0.1:8001/api/customers';
+    const EMP_URL = 'http://127.0.0.1:8001/api/employees';
 
     const userRole = localStorage.getItem('empl_role');
     let currentChecks = [];
@@ -44,6 +45,11 @@ document.addEventListener('DOMContentLoaded', () => {
         let url = `${API_URL}/?`;
         if (dateFrom.value) url += `start_date=${dateFrom.value}&`;
         if (dateTo.value) url += `end_date=${dateTo.value}&`;
+
+        const cashierFilter = document.getElementById('cashier-filter');
+        if (cashierFilter && cashierFilter.value) {
+            url += `id_employee=${cashierFilter.value}&`;
+        }
 
         fetch(url)
             .then(res => res.json())
@@ -92,8 +98,32 @@ document.addEventListener('DOMContentLoaded', () => {
         if (fpTo) fpTo.clear();
         else document.getElementById('date-to').value = '';
 
+        const cashierFilter = document.getElementById('cashier-filter');
+        if (cashierFilter) {
+            cashierFilter.value = '';
+            const wrapper = cashierFilter.parentNode;
+            if (wrapper && wrapper.classList.contains('custom-select-wrapper')) {
+                wrapper.querySelector('span').textContent = 'Всі касири';
+            }
+        }
+
         loadChecks();
     });
+
+    if (userRole === 'Менеджер') {
+        fetch(`${EMP_URL}/?role=Касир`)
+            .then(res => res.json())
+            .then(data => {
+                const cashierSelect = document.getElementById('cashier-filter');
+                if (cashierSelect) {
+                    data.forEach(emp => {
+                        cashierSelect.insertAdjacentHTML('beforeend', `<option value="${emp.id_employee}">${emp.empl_surname} ${emp.empl_name}</option>`);
+                    });
+                    setupCustomSelect('cashier-filter');
+                    cashierSelect.addEventListener('change', loadChecks);
+                }
+            });
+    }
 
     // Створення
     const createModal = document.getElementById('create-check-modal');

@@ -5,6 +5,7 @@
 
 {% block content %}
 <link rel="stylesheet" href="{% static 'css/employees.css' %}">
+<link rel="stylesheet" href="{% static 'css/custom-select.css' %}">
 
 <style>
     html[data-role="Касир"] .manager-only {
@@ -19,10 +20,16 @@
     </button>
 </div>
 
-<div class="toolbar">
-    <div class="search-box">
+<div class="toolbar" style="display: flex; align-items: center; gap: 15px;">
+    <div class="search-box" style="flex: 1;">
         <i class="fa-solid fa-magnifying-glass"></i>
         <input type="text" id="search-input" placeholder="Пошук за прізвищем...">
+    </div>
+
+    <div class="filter-box manager-only">
+        <select id="percent-filter">
+            <option value="" selected>Всі знижки</option>
+        </select>
     </div>
 </div>
 
@@ -109,7 +116,7 @@
         </div>
     </div>
 </div>
-
+<script src="{% static 'js/custom-select.js' %}"></script>
 <script src="{% static 'js/customers.js' %}"></script>
 {% endblock %}
 

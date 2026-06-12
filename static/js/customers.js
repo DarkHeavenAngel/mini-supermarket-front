@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const API_URL = 'http://127.0.0.1:8001/api/customers';
     const userRole = localStorage.getItem('empl_role');
     let currentCustomers = [];
+    let isPercentsLoaded = false;
     let editingCardId = null;
     let cardToDelete = null;
 
@@ -32,11 +33,6 @@ document.addEventListener('DOMContentLoaded', () => {
             alertEl.style.transition = 'all 0.3s ease';
             setTimeout(() => alertEl.remove(), 300);
         }, 3000);
-    }
-
-    if (userRole === 'Касир') {
-        const btnAdd = document.getElementById('btn-open-modal');
-        if (btnAdd) btnAdd.style.display = 'none';
     }
 
     const toggleModal = () => {
@@ -70,11 +66,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function loadCustomers() {
         const search = searchInput.value.trim();
-        fetch(`${API_URL}/?search=${search}`)
+        const percentFilter = document.getElementById('percent-filter');
+        const percent = percentFilter ? percentFilter.value : '';
+
+        fetch(`${API_URL}/?search=${search}&percent=${percent}`)
             .then(res => res.json())
             .then(data => {
                 currentCustomers = data;
                 tableBody.innerHTML = '';
+
+                if (!isPercentsLoaded && userRole === 'Менеджер' && percentFilter) {
+                    const uniquePercents = [...new Set(data.map(c => c.percent))].sort((a, b) => a - b);
+                    uniquePercents.forEach(p => {
+                        percentFilter.insertAdjacentHTML('beforeend', `<option value="${p}">${p}% знижки</option>`);
+                    });
+
+                    setupCustomSelect('percent-filter');
+                    percentFilter.addEventListener('change', loadCustomers); // Миттєве оновлення при виборі
+                    isPercentsLoaded = true;
+                }
 
                 if (data.length === 0) {
                     tableBody.innerHTML = '<tr><td colspan="6" style="text-align: center;">Клієнтів не знайдено</td></tr>';
@@ -83,7 +93,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 data.forEach(cust => {
                     const fullAddress = `м. ${cust.city}, вул. ${cust.street}, ${cust.zip_code}`;
-
                     const patronymic = cust.cust_patronymic ? cust.cust_patronymic : '';
                     const fullName = `${cust.cust_surname} ${cust.cust_name} ${patronymic}`.trim();
 
