@@ -208,11 +208,25 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     document.getElementById('btn-confirm-delete').addEventListener('click', () => {
-        fetch(`${API_URL}/${cardToDelete}/`, { method: 'DELETE' }).then(() => {
-            deleteModal.classList.add('hidden');
-            showGlobalAlert('Видалено!');
-            loadCustomers();
-        });
+        if (!cardToDelete) return;
+
+        fetch(`${API_URL}/${cardToDelete}/`, { method: 'DELETE' })
+            .then(async res => {
+                deleteModal.classList.add('hidden');
+                if (res.ok) {
+                    showGlobalAlert('Видалено!', 'success');
+                    loadCustomers();
+                } else {
+                    const errData = await res.json();
+                    showGlobalAlert(errData.error || errData.detail || 'Помилка видалення', 'error');
+                }
+                cardToDelete = null;
+            })
+            .catch(err => {
+                deleteModal.classList.add('hidden');
+                showGlobalAlert('Помилка з\'єднання з сервером', 'error');
+                cardToDelete = null;
+            });
     });
 
     document.getElementById('btn-cancel-delete').addEventListener('click', () => deleteModal.classList.add('hidden'));

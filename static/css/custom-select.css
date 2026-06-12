@@ -88,3 +88,28 @@
     color: #1b2610;
 }
 
+/* Пошук */
+.custom-select-search-box {
+    padding: 10px;
+    border-bottom: 1px solid var(--border-color, #e5e7eb);
+    position: sticky;
+    top: 0;
+    background: white;
+    z-index: 2;
+}
+
+.custom-select-search-input {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid var(--border-color, #d1d5db);
+    border-radius: 6px;
+    font-size: 13px;
+    box-sizing: border-box;
+    outline: none;
+    transition: border-color 0.2s ease;
+}
+
+.custom-select-search-input:focus {
+    border-color: #849964;
+}
+

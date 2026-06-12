@@ -146,6 +146,12 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('modal-title').textContent = 'Додати товар';
             form.reset();
 
+            const catWrapper = document.getElementById('category_number').parentNode;
+            if (catWrapper && catWrapper.classList.contains('custom-select-wrapper')) {
+                catWrapper.querySelector('.custom-select-trigger span').textContent = 'Оберіть категорію';
+                catWrapper.querySelectorAll('.custom-option').forEach(opt => opt.classList.remove('selected'));
+            }
+
             const idInput = document.getElementById('id_product');
             let nextId = 1;
             if (currentProducts.length > 0) {
@@ -168,6 +174,15 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('id_product').value = prod.id_product;
         document.getElementById('id_product').disabled = true;
         document.getElementById('category_number').value = prod.category_number;
+
+        const catWrapper = document.getElementById('category_number').parentNode;
+        if (catWrapper && catWrapper.classList.contains('custom-select-wrapper')) {
+            catWrapper.querySelector('.custom-select-trigger span').textContent = prod.category_name || 'Оберіть категорію';
+            catWrapper.querySelectorAll('.custom-option').forEach(opt => {
+                opt.classList.toggle('selected', opt.dataset.value == prod.category_number);
+            });
+        }
+
         document.getElementById('product_name').value = prod.product_name;
         document.getElementById('characteristics').value = prod.characteristics;
         document.getElementById('manufacturer').value = prod.manufacturer;
