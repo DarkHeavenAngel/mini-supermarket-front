@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const REPORT_PROD_URL = 'http://127.0.0.1:8001/api/reports/product-sales/';
     const REPORT_SALES_URL = 'http://127.0.0.1:8001/api/reports/total-sales/';
     const REPORT_TEAM_URL = 'http://127.0.0.1:8001/api/reports/team/';
+    const CAT_URL = 'http://127.0.0.1:8001/api/categories/';
 
     const previewContainer = document.getElementById('report-preview-container');
     const reportContent = document.getElementById('report-content');
@@ -31,6 +32,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 prodSelect.insertAdjacentHTML('beforeend', `<option value="${p.id_product}">${p.product_name} (ID: ${p.id_product})</option>`);
             });
             setupCustomSelect('report-product-id');
+        });
+
+    fetch(CAT_URL)
+        .then(res => res.json())
+        .then(data => {
+            const catSelect = document.getElementById('team-category-id');
+            if (catSelect) {
+                catSelect.innerHTML = '<option value="" disabled selected>Оберіть категорію...</option>';
+                data.forEach(cat => {
+                    catSelect.insertAdjacentHTML('beforeend', `<option value="${cat.category_number}">${cat.category_name}</option>`);
+                });
+                setupCustomSelect('team-category-id');
+            }
         });
 
     function updatePrintDate() {
@@ -228,6 +242,17 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     setupCustomSelect('report-author-id');
+    const authorSelect = document.getElementById('report-author-id');
+    const paramGroup = document.getElementById('daria-param-group');
+    if (authorSelect && paramGroup) {
+        authorSelect.addEventListener('change', (e) => {
+            if (e.target.value === 'daria_melnyk') {
+                paramGroup.style.display = 'block';
+            } else {
+                paramGroup.style.display = 'none';
+            }
+        });
+    }
 
     const teamForm = document.getElementById('team-report-form');
     if (teamForm) {
@@ -254,7 +279,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
 
-            fetch(`${REPORT_TEAM_URL}?author=${author}`)
+            let fetchUrl = `${REPORT_TEAM_URL}?author=${author}`;
+            if (author === 'daria_melnyk') {
+                const catId = document.getElementById('team-category-id').value || 1;
+                fetchUrl += `&category=${catId}`;
+            }
+
+            fetch(fetchUrl)
                 .then(res => res.json())
                 .then(data => {
                     if (data.error) throw new Error(data.error);
@@ -388,6 +419,66 @@ document.addEventListener('DOMContentLoaded', () => {
                             });
                         } else {
                             html += `<tr><td colspan="3" style="text-align: center;">Товари, що задовольняють умову, відсутні</td></tr>`;
+                        }
+                        html += `</tbody></table>`;
+                    } else if (author === 'daria_melnyk') {
+
+                        const catSelect = document.getElementById('team-category-id');
+                        const catName = catSelect.options[catSelect.selectedIndex].text;
+
+                        html += `
+                            <h4 style="margin-bottom: 10px; border-bottom: 1px solid var(--border-color); padding-bottom: 5px;">
+                                1. Загальна виручка касирів від продажу товарів категорії «${catName}»
+                            </h4>
+                            <table class="report-table" style="margin-bottom: 40px;">
+                                <thead>
+                                    <tr>
+                                        <th>Прізвище</th>
+                                        <th>Ім'я</th>
+                                        <th style="text-align: right;">Виручка з категорії (₴)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                        `;
+                        if (data.revenue_by_category && data.revenue_by_category.length > 0) {
+                            data.revenue_by_category.forEach(row => {
+                                html += `
+                                    <tr>
+                                        <td><strong>${row['Прізвище']}</strong></td>
+                                        <td>${row['Ім\'я']}</td>
+                                        <td style="text-align: right;"><strong>${parseFloat(row['Виручка з категорії']).toFixed(2)}</strong></td>
+                                    </tr>
+                                `;
+                            });
+                        } else {
+                            html += `<tr><td colspan="3" style="text-align: center;">У цій категорії не було продажів</td></tr>`;
+                        }
+                        html += `</tbody></table>`;
+
+                        html += `
+                            <h4 style="margin-bottom: 10px; border-bottom: 1px solid var(--border-color); padding-bottom: 5px;">
+                                2. Товари, які були продані хоча б один раз абсолютно всіма касирами
+                            </h4>
+                            <table class="report-table">
+                                <thead>
+                                    <tr>
+                                        <th>Назва товару</th>
+                                        <th>Виробник</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                        `;
+                        if (data.products_sold_by_all_cashiers && data.products_sold_by_all_cashiers.length > 0) {
+                            data.products_sold_by_all_cashiers.forEach(row => {
+                                html += `
+                                    <tr>
+                                        <td><strong>${row['Назва товару']}</strong></td>
+                                        <td>${row['Виробник']}</td>
+                                    </tr>
+                                `;
+                            });
+                        } else {
+                            html += `<tr><td colspan="2" style="text-align: center;">Товари, що задовольняють умову, відсутні</td></tr>`;
                         }
                         html += `</tbody></table>`;
                     }
