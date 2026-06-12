@@ -259,7 +259,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 .then(data => {
                     if (data.error) throw new Error(data.error);
 
-                    document.getElementById('print-report-title').textContent = `Комплексний звіт команди: ${data.author}`;
+                    document.getElementById('print-report-title').textContent = `Індивідуальний звіт запитів: ${data.author}`;
                     updatePrintDate();
 
                     let html = `
