@@ -299,7 +299,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                         html += `
                             <h4 style="margin-bottom: 10px; border-bottom: 1px solid var(--border-color); padding-bottom: 5px;">
-                                2. Чеки, які містять абсолютно всі акційні товари (Реляційне ділення)
+                                2. Чеки, які містять абсолютно всі акційні товари
                             </h4>
                             <table class="report-table">
                                 <thead>
