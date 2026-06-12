@@ -329,6 +329,67 @@ document.addEventListener('DOMContentLoaded', () => {
                             html += `<tr><td colspan="4" style="text-align: center;">Чеки, що задовольняють умову, відсутні</td></tr>`;
                         }
                         html += `</tbody></table>`;
+                    } else if (author === 'olha_marushchenko') {
+
+                        html += `
+                            <h4 style="margin-bottom: 10px; border-bottom: 1px solid var(--border-color); padding-bottom: 5px;">
+                                1. Кількість чеків, створених кожним касиром
+                            </h4>
+                            <table class="report-table" style="margin-bottom: 40px;">
+                                <thead>
+                                    <tr>
+                                        <th>ID Касира</th>
+                                        <th>Прізвище та Ім'я</th>
+                                        <th>Телефон</th>
+                                        <th style="text-align: center;">Кількість чеків</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                        `;
+                        if (data.cashier_check_counts && data.cashier_check_counts.length > 0) {
+                            data.cashier_check_counts.forEach(row => {
+                                html += `
+                                    <tr>
+                                        <td><strong>${row['id_employee']}</strong></td>
+                                        <td>${row['empl_surname']} ${row['empl_name']}</td>
+                                        <td>${row['phone_number']}</td>
+                                        <td style="text-align: center;"><strong>${row['total_checks']}</strong></td>
+                                    </tr>
+                                `;
+                            });
+                        } else {
+                            html += `<tr><td colspan="4" style="text-align: center;">Даних немає</td></tr>`;
+                        }
+                        html += `</tbody></table>`;
+
+                        html += `
+                            <h4 style="margin-bottom: 10px; border-bottom: 1px solid var(--border-color); padding-bottom: 5px;">
+                                2. Товари, які купували абсолютно всі клієнти з картками
+                            </h4>
+                            <table class="report-table">
+                                <thead>
+                                    <tr>
+                                        <th>Назва товару</th>
+                                        <th>Характеристики</th>
+                                        <th style="text-align: right;">Ціна (₴)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                        `;
+                        if (data.products_bought_by_all_card_holders && data.products_bought_by_all_card_holders.length > 0) {
+                            data.products_bought_by_all_card_holders.forEach(row => {
+                                html += `
+                                    <tr>
+                                        <td><strong>${row['product_name']}</strong></td>
+                                        <td>${row['characteristics']}</td>
+                                        <td style="text-align: right;">${parseFloat(row['selling_price']).toFixed(2)}</td>
+                                    </tr>
+                                `;
+                            });
+                        } else {
+                            html += `<tr><td colspan="3" style="text-align: center;">Товари, що задовольняють умову, відсутні</td></tr>`;
+                        }
+                        html += `</tbody></table>`;
                     }
 
                     reportContent.innerHTML = html;
