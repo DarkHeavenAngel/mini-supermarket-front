@@ -1,6 +1,6 @@
 .report-controls {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
     gap: 30px;
     margin-top: 40px;
     margin-bottom: 40px;
@@ -175,6 +175,18 @@
 }
 
 @media print {
+    .page-header,
+    .report-controls,
+    .cashier-denied {
+        display: none !important;
+    }
+
+    html, body {
+        height: auto !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
     body * { visibility: hidden; }
 
     #report-preview-container,
@@ -191,6 +203,7 @@
         box-shadow: none;
         padding: 1.5cm;
         box-sizing: border-box;
+        margin: 0 !important;
     }
 
     .no-print { display: none !important; }

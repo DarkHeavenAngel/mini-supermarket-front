@@ -10,6 +10,10 @@
 <style>
     html[data-role="Касир"] .manager-only { display: none !important; }
     html[data-role="Менеджер"] .cashier-denied { display: none !important; }
+
+    #team-report-form .custom-select-wrapper {
+        width: 100%;
+    }
 </style>
 
 <div class="cashier-denied" style="text-align: center; margin-top: 100px; color: var(--color-rust, #d44000);">
@@ -18,7 +22,7 @@
 </div>
 
 <div class="manager-only">
-    <div class="page-header">
+<div class="page-header">
         <h1>Формування звітів</h1>
     </div>
 
@@ -82,9 +86,32 @@
                 <button type="submit" class="action-btn primary btn-full-width"><i class="fa-solid fa-money-bill-trend-up"></i> Згенерувати</button>
             </form>
         </div>
-    </div>
 
-    <div id="report-preview-container">
+        <div class="report-card">
+            <h3>Звіт: Індивідуальні запити</h3>
+            <form id="team-report-form" novalidate>
+                <div id="team-error-message" class="alert alert-error form-error" style="display: none;">
+                    <i class="fa-solid fa-circle-exclamation"></i>
+                    <span id="team-error-text"></span>
+                </div>
+
+                <div class="form-group">
+                    <label>Оберіть розробника *</label>
+                    <select id="report-author-id" required>
+                        <option value="" disabled selected>Оберіть члена команди...</option>
+                        <option value="olha_mykhailyk">Ольга Михайлик</option>
+                        <option value="olha_marushchenko" disabled>Ольга Марущенко</option>
+                        <option value="daria_melnyk" disabled>Дар'я Мельник</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="action-btn primary btn-full-width" style="margin-top: auto;">
+                    <i class="fa-solid fa-code"></i> Згенерувати
+                </button>
+            </form>
+        </div>
+
+    </div> <div id="report-preview-container">
         <button onclick="window.print()" class="action-btn secondary no-print" style="float: right; margin-bottom: 20px;">
             <i class="fa-solid fa-print"></i> Друкувати звіт
         </button>
