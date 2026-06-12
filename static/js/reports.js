@@ -279,10 +279,28 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
 
+            if (author === 'daria_melnyk') {
+                const catId = document.getElementById('team-category-id').value;
+                const catWrapper = document.getElementById('team-category-id').parentNode;
+
+                if (!catId) {
+                    errorText.textContent = "Будь ласка, обов'язково оберіть категорію товару!";
+                    errorBox.style.display = 'flex';
+                    if (catWrapper && catWrapper.classList.contains('custom-select-wrapper')) {
+                        catWrapper.querySelector('.custom-select-trigger').style.borderColor = 'var(--color-rust)';
+                    }
+                    return;
+                } else {
+                    if (catWrapper && catWrapper.classList.contains('custom-select-wrapper')) {
+                        catWrapper.querySelector('.custom-select-trigger').style.borderColor = 'var(--border-color, #d1d5db)';
+                    }
+                }
+            }
+
             let fetchUrl = `${REPORT_TEAM_URL}?author=${author}`;
             if (author === 'daria_melnyk') {
-                const catId = document.getElementById('team-category-id').value || 1;
-                fetchUrl += `&category=${catId}`;
+                const catId = document.getElementById('team-category-id').value;
+                fetchUrl += `&category_id=${catId}`;
             }
 
             fetch(fetchUrl)
