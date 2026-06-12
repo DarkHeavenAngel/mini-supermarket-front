@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const PROD_URL = 'http://127.0.0.1:8001/api/products/';
     const REPORT_PROD_URL = 'http://127.0.0.1:8001/api/reports/product-sales/';
     const REPORT_SALES_URL = 'http://127.0.0.1:8001/api/reports/total-sales/';
+    const REPORT_TEAM_URL = 'http://127.0.0.1:8001/api/reports/team/';
 
     const previewContainer = document.getElementById('report-preview-container');
     const reportContent = document.getElementById('report-content');
@@ -225,5 +226,121 @@ document.addEventListener('DOMContentLoaded', () => {
                 errorBox.style.display = 'flex';
             });
     });
+
+    setupCustomSelect('report-author-id');
+
+    const teamForm = document.getElementById('team-report-form');
+    if (teamForm) {
+        teamForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const errorBox = document.getElementById('team-error-message');
+            const errorText = document.getElementById('team-error-text');
+
+            errorBox.style.display = 'none';
+
+            const author = document.getElementById('report-author-id').value;
+            const selectWrapper = document.getElementById('report-author-id').parentNode;
+
+            if (!author) {
+                errorText.textContent = "Будь ласка, оберіть члена команди зі списку!";
+                errorBox.style.display = 'flex';
+                if (selectWrapper && selectWrapper.classList.contains('custom-select-wrapper')) {
+                    selectWrapper.querySelector('.custom-select-trigger').style.borderColor = 'var(--color-rust)';
+                }
+                return;
+            } else {
+                if (selectWrapper && selectWrapper.classList.contains('custom-select-wrapper')) {
+                    selectWrapper.querySelector('.custom-select-trigger').style.borderColor = 'var(--border-color, #d1d5db)';
+                }
+            }
+
+            fetch(`${REPORT_TEAM_URL}?author=${author}`)
+                .then(res => res.json())
+                .then(data => {
+                    if (data.error) throw new Error(data.error);
+
+                    document.getElementById('print-report-title').textContent = `Комплексний звіт команди: ${data.author}`;
+                    updatePrintDate();
+
+                    let html = `
+                        <h3 class="no-print" style="margin-bottom: 20px;">Попередній перегляд: ${data.author}</h3>
+                    `;
+
+                    if (author === 'olha_mykhailyk') {
+
+                        html += `
+                            <h4 style="margin-bottom: 10px; border-bottom: 1px solid var(--border-color); padding-bottom: 5px;">
+                                1. Виручка та кількість проданих одиниць за категоріями
+                            </h4>
+                            <table class="report-table" style="margin-bottom: 40px;">
+                                <thead>
+                                    <tr>
+                                        <th>Назва категорії</th>
+                                        <th style="text-align: center;">Продано одиниць</th>
+                                        <th style="text-align: right;">Загальна виручка (₴)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                        `;
+                        if (data.category_sales_summary && data.category_sales_summary.length > 0) {
+                            data.category_sales_summary.forEach(row => {
+                                html += `
+                                    <tr>
+                                        <td>${row['Назва категорії']}</td>
+                                        <td style="text-align: center;">${row['Продано одиниць']}</td>
+                                        <td style="text-align: right;"><strong>${parseFloat(row['Загальна виручка']).toFixed(2)}</strong></td>
+                                    </tr>
+                                `;
+                            });
+                        } else {
+                            html += `<tr><td colspan="3" style="text-align: center;">Даних немає</td></tr>`;
+                        }
+                        html += `</tbody></table>`;
+
+                        html += `
+                            <h4 style="margin-bottom: 10px; border-bottom: 1px solid var(--border-color); padding-bottom: 5px;">
+                                2. Чеки, які містять абсолютно всі акційні товари (Реляційне ділення)
+                            </h4>
+                            <table class="report-table">
+                                <thead>
+                                    <tr>
+                                        <th>Номер чеку</th>
+                                        <th>Дата чеку</th>
+                                        <th>Прізвище касира</th>
+                                        <th style="text-align: right;">Сума чеку (₴)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                        `;
+                        if (data.checks_with_all_promo_items && data.checks_with_all_promo_items.length > 0) {
+                            data.checks_with_all_promo_items.forEach(row => {
+                                const dateObj = new Date(row['Дата чеку']);
+                                const formattedDate = dateObj.toLocaleString('uk-UA');
+                                html += `
+                                    <tr>
+                                        <td><strong>${row['Номер чеку']}</strong></td>
+                                        <td>${formattedDate}</td>
+                                        <td>${row['Прізвище касира']}</td>
+                                        <td style="text-align: right;">${parseFloat(row['Сума чеку']).toFixed(2)}</td>
+                                    </tr>
+                                `;
+                            });
+                        } else {
+                            html += `<tr><td colspan="4" style="text-align: center;">Чеки, що задовольняють умову, відсутні</td></tr>`;
+                        }
+                        html += `</tbody></table>`;
+                    }
+
+                    reportContent.innerHTML = html;
+
+                    previewContainer.style.display = 'block';
+                    previewContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                })
+                .catch(err => {
+                    errorText.textContent = err.message || 'Помилка при формуванні звіту команди';
+                    errorBox.style.display = 'flex';
+                });
+        });
+    }
 });
 
