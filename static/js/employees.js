@@ -14,6 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const errorText = document.getElementById('modal-error-text');
 
     setupCustomSelect('role-filter');
+    setupCustomSelect('empl_role');
 
     function showGlobalAlert(message, type = 'success') {
         let container = document.getElementById('global-alerts-container');
@@ -134,6 +135,12 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('modal-title').textContent = 'Додати працівника';
         form.reset();
 
+        const roleWrapper = document.getElementById('empl_role').parentNode;
+        if (roleWrapper && roleWrapper.classList.contains('custom-select-wrapper')) {
+            roleWrapper.querySelector('.custom-select-trigger span').textContent = 'Оберіть посаду...';
+            roleWrapper.querySelectorAll('.custom-option').forEach(opt => opt.classList.remove('selected'));
+        }
+
         document.getElementById('id_employee').disabled = false;
         document.getElementById('phone_number').value = '+380';
 
@@ -144,7 +151,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Редагування
-    window.openEditModal = (id) => {
+window.openEditModal = (id) => {
         editingEmployeeId = id;
         const emp = currentEmployees.find(e => e.id_employee === id);
         if (!emp) return;
@@ -155,16 +162,50 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('id_employee').disabled = true;
 
         document.getElementById('empl_role').value = emp.empl_role;
+
+        const roleWrapper = document.getElementById('empl_role').parentNode;
+        if (roleWrapper && roleWrapper.classList.contains('custom-select-wrapper')) {
+            roleWrapper.querySelector('.custom-select-trigger span').textContent = emp.empl_role;
+            roleWrapper.querySelectorAll('.custom-option').forEach(opt => {
+                opt.classList.toggle('selected', opt.dataset.value === emp.empl_role);
+            });
+        }
+
         document.getElementById('empl_surname').value = emp.empl_surname;
         document.getElementById('empl_name').value = emp.empl_name;
         document.getElementById('empl_patronymic').value = emp.empl_patronymic || '';
         document.getElementById('salary').value = parseFloat(emp.salary).toFixed(2);
         document.getElementById('phone_number').value = emp.phone_number;
-        document.getElementById('date_of_birth').value = emp.date_of_birth;
-        document.getElementById('date_of_start').value = emp.date_of_start;
         document.getElementById('city').value = emp.city;
         document.getElementById('street').value = emp.street;
         document.getElementById('zip_code').value = emp.zip_code;
+
+        const parseDateForInput = (val) => {
+            if (!val) return '';
+            let s = String(val).trim();
+
+            if (s.match(/^\d{4}-\d{2}-\d{2}/)) {
+                return s.substring(0, 10);
+            }
+
+            if (s.match(/^\d{2}[\.\-\/]\d{2}[\.\-\/]\d{4}/)) {
+                let parts = s.split(/[\.\-\/]/);
+                return `${parts[2]}-${parts[1]}-${parts[0]}`;
+            }
+            return '';
+        };
+
+        const dobVal = parseDateForInput(emp.date_of_birth);
+        const startVal = parseDateForInput(emp.date_of_start);
+
+        const dobInput = document.getElementById('date_of_birth');
+        const startInput = document.getElementById('date_of_start');
+
+        dobInput.value = dobVal;
+        startInput.value = startVal;
+
+        if (dobInput._flatpickr) dobInput._flatpickr.setDate(dobVal);
+        if (startInput._flatpickr) startInput._flatpickr.setDate(startVal);
 
         document.getElementById('password-group').style.display = 'none';
         document.getElementById('employee_password').required = false;

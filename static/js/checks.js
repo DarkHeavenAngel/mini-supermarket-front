@@ -197,13 +197,26 @@ document.addEventListener('DOMContentLoaded', () => {
             rows.forEach(row => {
                 const select = row.querySelector('.item-upc');
                 const qtyInput = row.querySelector('.item-qty');
-                const selectedOption = select.options[select.selectedIndex];
 
-                if (!select.value || !qtyInput.value) { isValid = false; }
+                select.style.borderColor = 'var(--border-color)';
+                qtyInput.style.borderColor = 'var(--border-color)';
+
+                if (!select.value || !qtyInput.value) {
+                    isValid = false;
+
+                    if (!select.value) select.style.borderColor = 'var(--color-rust)';
+                    if (!qtyInput.value) qtyInput.style.borderColor = 'var(--color-rust)';
+
+                    errorText.textContent = "Будь ласка, оберіть товар та вкажіть його кількість для всіх позицій.";
+                    errorBox.style.display = 'flex';
+                }
                 else {
+                    const selectedOption = select.options[select.selectedIndex];
                     const maxQty = parseInt(selectedOption.getAttribute('data-max'));
                     const reqQty = parseInt(qtyInput.value);
+
                     if (reqQty > maxQty) {
+                        qtyInput.style.borderColor = 'var(--color-rust)';
                         errorText.textContent = `Ви не можете пробити більше товарів, ніж є на складі! (Залишок: ${maxQty})`;
                         errorBox.style.display = 'flex';
                         isValid = false;
