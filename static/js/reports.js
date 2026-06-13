@@ -244,12 +244,23 @@ document.addEventListener('DOMContentLoaded', () => {
     setupCustomSelect('report-author-id');
     const authorSelect = document.getElementById('report-author-id');
     const paramGroup = document.getElementById('daria-param-group');
+    const marushchenkoDates = document.getElementById('olha-marushchenko-dates');
+
     if (authorSelect && paramGroup) {
         authorSelect.addEventListener('change', (e) => {
+            // Сховати всі додаткові поля спочатку
+            paramGroup.style.display = 'none';
+            if (marushchenkoDates) marushchenkoDates.style.display = 'none';
+
+            const dateFromInput = document.getElementById('team-date-from');
+            const dateToInput = document.getElementById('team-date-to');
+            if (dateFromInput) dateFromInput.style.borderColor = 'var(--border-color, #d1d5db)';
+            if (dateToInput) dateToInput.style.borderColor = 'var(--border-color, #d1d5db)';
+
             if (e.target.value === 'daria_melnyk') {
                 paramGroup.style.display = 'block';
-            } else {
-                paramGroup.style.display = 'none';
+            } else if (e.target.value === 'olha_marushchenko') {
+                if (marushchenkoDates) marushchenkoDates.style.display = 'block';
             }
         });
     }
@@ -301,6 +312,31 @@ document.addEventListener('DOMContentLoaded', () => {
             if (author === 'daria_melnyk') {
                 const catId = document.getElementById('team-category-id').value;
                 fetchUrl += `&category_id=${catId}`;
+            }
+
+            if (author === 'olha_marushchenko') {
+                const dateFromInput = document.getElementById('team-date-from');
+                const dateToInput = document.getElementById('team-date-to');
+
+                if (!dateFromInput.value || !dateToInput.value) {
+                    errorText.textContent = "Будь ласка, вкажіть обидві дати для формування звіту!";
+                    errorBox.style.display = 'flex';
+                    if (!dateFromInput.value) dateFromInput.style.borderColor = 'var(--color-rust)';
+                    if (!dateToInput.value) dateToInput.style.borderColor = 'var(--color-rust)';
+                    return;
+                }
+
+                // Валідація дат
+                if (dateFrom && dateTo && dateFrom > dateTo) {
+                    errorText.textContent = 'Початкова дата не може бути більшою за кінцеву!';
+                    errorBox.style.display = 'flex';
+                    document.getElementById('team-date-from').style.borderColor = 'var(--color-rust)';
+                    document.getElementById('team-date-to').style.borderColor = 'var(--color-rust)';
+                    return;
+                }
+
+                if (dateFrom) fetchUrl += `&date_from=${dateFrom}`;
+                if (dateTo) fetchUrl += `&date_to=${dateTo}`;
             }
 
             fetch(fetchUrl)
@@ -380,6 +416,21 @@ document.addEventListener('DOMContentLoaded', () => {
                         html += `</tbody></table>`;
 
                     } else if (author === 'olha_marushchenko') {
+                        // НОВЕ: показати обраний період
+                        const dateFrom = document.getElementById('team-date-from').value;
+                        const dateTo = document.getElementById('team-date-to').value;
+
+                        if (dateFrom && dateTo) {
+                            html += `<p><strong>Період (Запит 1):</strong> з ${dateFrom} по ${dateTo}</p>`;
+                        } else if (dateFrom) {
+                            html += `<p><strong>Період (Запит 1):</strong> з ${dateFrom}</p>`;
+                        } else if (dateTo) {
+                            html += `<p><strong>Період (Запит 1):</strong> по ${dateTo}</p>`;
+                        } else {
+                            html += `<p><strong>Період (Запит 1):</strong> весь час</p>`;
+                        }
+
+                        html += `<h4 ...> 1. Ефективність касирів ...`; // далі без змін
 
                         html += `
                             <h4 style="margin-bottom: 10px; border-bottom: 1px solid var(--border-color); padding-bottom: 5px;">
