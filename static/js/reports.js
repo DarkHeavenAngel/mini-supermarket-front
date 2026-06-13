@@ -252,6 +252,9 @@ document.addEventListener('DOMContentLoaded', () => {
             paramGroup.style.display = 'none';
             if (marushchenkoDates) marushchenkoDates.style.display = 'none';
 
+            const olyaParamGroup = document.getElementById('olya-param-group');
+            if (olyaParamGroup) olyaParamGroup.style.display = 'none';
+
             const dateFromInput = document.getElementById('team-date-from');
             const dateToInput = document.getElementById('team-date-to');
             if (dateFromInput) dateFromInput.style.borderColor = 'var(--border-color, #d1d5db)';
@@ -261,6 +264,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 paramGroup.style.display = 'block';
             } else if (e.target.value === 'olha_marushchenko') {
                 if (marushchenkoDates) marushchenkoDates.style.display = 'block';
+            } else if (e.target.value === 'olha_mykhailyk') {
+                if (olyaParamGroup) olyaParamGroup.style.display = 'block';
             }
         });
     }
@@ -325,7 +330,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (!dateToInput.value) dateToInput.style.borderColor = 'var(--color-rust)';
                     return;
                 }
-
                 // Валідація дат
                 if (dateFrom && dateTo && dateFrom > dateTo) {
                     errorText.textContent = 'Початкова дата не може бути більшою за кінцеву!';
@@ -337,6 +341,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 if (dateFrom) fetchUrl += `&date_from=${dateFrom}`;
                 if (dateTo) fetchUrl += `&date_to=${dateTo}`;
+            }
+
+            if (author === 'olha_mykhailyk') {
+                const minRevInput = document.getElementById('team-min-revenue');
+                const minRev = minRevInput.value;
+
+                if (!minRev || parseFloat(minRev) < 0) {
+                    errorText.textContent = "Будь ласка, вкажіть коректну мінімальну виручку (0 або більше)!";
+                    errorBox.style.display = 'flex';
+                    minRevInput.style.borderColor = 'var(--color-rust)';
+                    return;
+                } else {
+                    minRevInput.style.borderColor = 'var(--border-color, #d1d5db)';
+                }
+
+                fetchUrl += `&min_revenue=${minRev}`;
             }
 
             fetch(fetchUrl)
@@ -355,7 +375,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                         html += `
                             <h4 style="margin-bottom: 10px; border-bottom: 1px solid var(--border-color); padding-bottom: 5px;">
-                                1. Виручка та кількість проданих одиниць за категоріями
+                                1. Виручка та кількість проданих одиниць за категоріями та мінімальною виручкою
                             </h4>
                             <table class="report-table" style="margin-bottom: 40px;">
                                 <thead>
