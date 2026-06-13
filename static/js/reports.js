@@ -378,19 +378,21 @@ document.addEventListener('DOMContentLoaded', () => {
                             html += `<tr><td colspan="4" style="text-align: center;">Чеки, що задовольняють умову, відсутні</td></tr>`;
                         }
                         html += `</tbody></table>`;
+
                     } else if (author === 'olha_marushchenko') {
 
                         html += `
                             <h4 style="margin-bottom: 10px; border-bottom: 1px solid var(--border-color); padding-bottom: 5px;">
-                                1. Кількість чеків, створених кожним касиром
+                                1. Ефективність касирів (Кількість чеків, продані одиниці та виручка)
                             </h4>
                             <table class="report-table" style="margin-bottom: 40px;">
                                 <thead>
                                     <tr>
                                         <th>ID Касира</th>
                                         <th>Прізвище та Ім'я</th>
-                                        <th>Телефон</th>
                                         <th style="text-align: center;">Кількість чеків</th>
+                                        <th style="text-align: center;">Продано одиниць</th>
+                                        <th style="text-align: right;">Загальна виручка (₴)</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -401,13 +403,14 @@ document.addEventListener('DOMContentLoaded', () => {
                                     <tr>
                                         <td><strong>${row['id_employee']}</strong></td>
                                         <td>${row['empl_surname']} ${row['empl_name']}</td>
-                                        <td>${row['phone_number']}</td>
                                         <td style="text-align: center;"><strong>${row['total_checks']}</strong></td>
+                                        <td style="text-align: center;">${row['total_items_sold']}</td>
+                                        <td style="text-align: right;"><strong>${parseFloat(row['total_revenue']).toFixed(2)}</strong></td>
                                     </tr>
                                 `;
                             });
                         } else {
-                            html += `<tr><td colspan="4" style="text-align: center;">Даних немає</td></tr>`;
+                            html += `<tr><td colspan="5" style="text-align: center;">Даних немає</td></tr>`;
                         }
                         html += `</tbody></table>`;
 
