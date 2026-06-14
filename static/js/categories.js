@@ -149,10 +149,10 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        const nameRegex = /^[A-Za-zА-Яа-яІіЇїЄєҐґ\s]+$/;
+        const nameRegex = /^[A-Za-zА-Яа-яІіЇїЄєҐґ\s'’\-]+$/;
 
         if (!nameRegex.test(categoryNameValue)) {
-            errorText.textContent = "Назва категорії повинна містити лише літери та пробіли (без цифр і символів).";
+            errorText.textContent = "Назва категорії може містити лише літери, пробіли, апострофи та дефіси.";
             errorBox.style.display = 'flex';
             categoryNameInput.style.borderColor = 'var(--color-rust)';
             return;

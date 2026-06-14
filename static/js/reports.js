@@ -322,25 +322,26 @@ document.addEventListener('DOMContentLoaded', () => {
             if (author === 'olha_marushchenko') {
                 const dateFromInput = document.getElementById('team-date-from');
                 const dateToInput = document.getElementById('team-date-to');
+                const valFrom = dateFromInput.value;
+                const valTo = dateToInput.value;
 
-                if (!dateFromInput.value || !dateToInput.value) {
+                if (!valFrom || !valTo) {
                     errorText.textContent = "Будь ласка, вкажіть обидві дати для формування звіту!";
                     errorBox.style.display = 'flex';
-                    if (!dateFromInput.value) dateFromInput.style.borderColor = 'var(--color-rust)';
-                    if (!dateToInput.value) dateToInput.style.borderColor = 'var(--color-rust)';
-                    return;
-                }
-                // Валідація дат
-                if (dateFrom && dateTo && dateFrom > dateTo) {
-                    errorText.textContent = 'Початкова дата не може бути більшою за кінцеву!';
-                    errorBox.style.display = 'flex';
-                    document.getElementById('team-date-from').style.borderColor = 'var(--color-rust)';
-                    document.getElementById('team-date-to').style.borderColor = 'var(--color-rust)';
+                    if (!valFrom) dateFromInput.style.borderColor = 'var(--color-rust)';
+                    if (!valTo) dateToInput.style.borderColor = 'var(--color-rust)';
                     return;
                 }
 
-                if (dateFrom) fetchUrl += `&date_from=${dateFrom}`;
-                if (dateTo) fetchUrl += `&date_to=${dateTo}`;
+                if (valFrom > valTo) {
+                    errorText.textContent = 'Початкова дата не може бути більшою за кінцеву!';
+                    errorBox.style.display = 'flex';
+                    dateFromInput.style.borderColor = 'var(--color-rust)';
+                    dateToInput.style.borderColor = 'var(--color-rust)';
+                    return;
+                }
+
+                fetchUrl += `&date_from=${valFrom}&date_to=${valTo}`;
             }
 
             if (author === 'olha_mykhailyk') {
@@ -436,25 +437,12 @@ document.addEventListener('DOMContentLoaded', () => {
                         html += `</tbody></table>`;
 
                     } else if (author === 'olha_marushchenko') {
-                        // НОВЕ: показати обраний період
                         const dateFrom = document.getElementById('team-date-from').value;
                         const dateTo = document.getElementById('team-date-to').value;
 
-                        if (dateFrom && dateTo) {
-                            html += `<p><strong>Період (Запит 1):</strong> з ${dateFrom} по ${dateTo}</p>`;
-                        } else if (dateFrom) {
-                            html += `<p><strong>Період (Запит 1):</strong> з ${dateFrom}</p>`;
-                        } else if (dateTo) {
-                            html += `<p><strong>Період (Запит 1):</strong> по ${dateTo}</p>`;
-                        } else {
-                            html += `<p><strong>Період (Запит 1):</strong> весь час</p>`;
-                        }
-
-                        html += `<h4 ...> 1. Ефективність касирів ...`; // далі без змін
-
                         html += `
                             <h4 style="margin-bottom: 10px; border-bottom: 1px solid var(--border-color); padding-bottom: 5px;">
-                                1. Ефективність касирів (Кількість чеків, продані одиниці та виручка)
+                                1. Ефективність касирів за період з ${dateFrom} по ${dateTo}
                             </h4>
                             <table class="report-table" style="margin-bottom: 40px;">
                                 <thead>
@@ -468,6 +456,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                 </thead>
                                 <tbody>
                         `;
+
                         if (data.cashier_check_counts && data.cashier_check_counts.length > 0) {
                             data.cashier_check_counts.forEach(row => {
                                 html += `

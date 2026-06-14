@@ -48,12 +48,12 @@
 
 .check-row {
     display: grid;
-    grid-template-columns: 2fr 1fr auto;
-    gap: 10px;
-    align-items: end;
-    margin-bottom: 10px;
+    grid-template-columns: 4fr 1fr auto;
+    gap: 15px;
+    align-items: center;
+    margin-bottom: 15px;
     background: var(--bg-light);
-    padding: 10px;
+    padding: 15px;
     border-radius: 8px;
     border: 1px solid var(--border-color);
 }
