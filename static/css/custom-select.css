@@ -43,30 +43,23 @@
 
 .custom-options {
     position: absolute;
-    display: block;
-    top: 100%;
-    left: 0;
-    right: 0;
     background: #ffffff;
     border: 1px solid var(--border-color);
     border-radius: 8px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    margin-top: 6px;
-    z-index: 100;
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
-    transform: translateY(-10px);
-    transition: all 0.2s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    z-index: 999999;
+    display: none;
     max-height: 250px;
     overflow-y: auto;
 }
 
-.custom-select-wrapper.open .custom-options {
-    opacity: 1;
-    visibility: visible;
-    pointer-events: all;
-    transform: translateY(0);
+.custom-options.open {
+    display: block;
+}
+
+@keyframes dropdownSlide {
+    0% { opacity: 0; transform: translateY(-10px); }
+    100% { opacity: 1; transform: translateY(0); }
 }
 
 .custom-option {
