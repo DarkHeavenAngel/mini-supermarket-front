@@ -141,16 +141,50 @@ document.addEventListener('DOMContentLoaded', () => {
             setupCustomSelect('card_number');
         });
 
+        window.checkScrollLimit = () => {
+            const rows = itemsContainer.querySelectorAll('.check-row');
+            if (rows.length > 3) {
+                itemsContainer.classList.add('scroll-active');
+            } else {
+                itemsContainer.classList.remove('scroll-active');
+            }
+        };
+
+        window.removeCheckRow = (rowId) => {
+            const row = document.getElementById(`row-${rowId}`);
+            if (row) {
+                const wrapper = row.querySelector('.custom-select-wrapper');
+                if (wrapper && wrapper.optionsContainerRef) {
+                    wrapper.optionsContainerRef.remove();
+                }
+                row.remove();
+                window.checkScrollLimit();
+            }
+        };
+
         document.getElementById('btn-open-modal').addEventListener('click', () => {
             document.getElementById('create-check-form').reset();
+
+            itemsContainer.querySelectorAll('.custom-select-wrapper').forEach(w => {
+                if(w.optionsContainerRef) w.optionsContainerRef.remove();
+            });
             itemsContainer.innerHTML = '';
             errorBox.style.display = 'none';
             document.getElementById('card_number').dispatchEvent(new Event('change'));
+
             addCheckRow();
             createModal.classList.remove('hidden');
+
+            document.body.style.overflow = 'hidden';
         });
 
-        const closeCreateModal = () => createModal.classList.add('hidden');
+        const closeCreateModal = () => {
+            createModal.classList.add('hidden');
+            document.body.style.overflow = '';
+            itemsContainer.querySelectorAll('.custom-select-wrapper').forEach(w => {
+                if(w.optionsContainerRef) w.optionsContainerRef.remove();
+            });
+        };
         document.getElementById('btn-close-create').addEventListener('click', closeCreateModal);
         document.getElementById('btn-cancel-create').addEventListener('click', closeCreateModal);
 
@@ -173,7 +207,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div>
                         <input type="number" class="item-qty" placeholder="К-сть" required min="1" step="1">
                     </div>
-                    <button type="button" class="remove-row-btn" onclick="document.getElementById('row-${rowId}').remove()" title="Видалити рядок">
+                    <button type="button" class="remove-row-btn" onclick="removeCheckRow('${rowId}')" title="Видалити рядок">
                         <i class="fa-solid fa-circle-minus"></i>
                     </button>
                 </div>
@@ -181,6 +215,9 @@ document.addEventListener('DOMContentLoaded', () => {
             itemsContainer.insertAdjacentHTML('beforeend', rowHTML);
 
             setupCustomSelect(selectId);
+            window.checkScrollLimit();
+
+            itemsContainer.scrollTop = itemsContainer.scrollHeight;
         };
 
         document.getElementById('btn-add-item').addEventListener('click', addCheckRow);
@@ -338,6 +375,7 @@ document.addEventListener('DOMContentLoaded', () => {
         overlay.addEventListener('click', (e) => {
             if (e.target === overlay) {
                 overlay.classList.add('hidden');
+                document.body.style.overflow = '';
 
                 if (overlay.id === 'delete-modal') {
                     checkToDelete = null;

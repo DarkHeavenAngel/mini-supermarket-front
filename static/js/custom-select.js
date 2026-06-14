@@ -17,7 +17,9 @@ window.setupCustomSelect = function(selectId) {
 
     const optionsContainer = document.createElement('div');
     optionsContainer.className = 'custom-options';
-    wrapper.appendChild(optionsContainer);
+
+    document.body.appendChild(optionsContainer);
+    wrapper.optionsContainerRef = optionsContainer;
 
     const searchBox = document.createElement('div');
     searchBox.className = 'custom-select-search-box';
@@ -38,14 +40,9 @@ window.setupCustomSelect = function(selectId) {
     searchInput.addEventListener('input', function(e) {
         const filter = e.target.value.toLowerCase();
         const customOptions = optionsContainer.querySelectorAll('.custom-option');
-
         customOptions.forEach(opt => {
             const text = opt.textContent.toLowerCase();
-            if (text.includes(filter)) {
-                opt.style.display = 'block';
-            } else {
-                opt.style.display = 'none';
-            }
+            opt.style.display = text.includes(filter) ? 'block' : 'none';
         });
     });
 
@@ -57,7 +54,8 @@ window.setupCustomSelect = function(selectId) {
         customOption.textContent = option.text;
         customOption.dataset.value = option.value;
 
-        customOption.addEventListener('click', function() {
+        customOption.addEventListener('click', function(e) {
+            e.stopPropagation();
             select.value = this.dataset.value;
             trigger.querySelector('span').textContent = this.textContent;
 
@@ -65,30 +63,59 @@ window.setupCustomSelect = function(selectId) {
             this.classList.add('selected');
 
             wrapper.classList.remove('open');
+            optionsContainer.classList.remove('open');
             select.dispatchEvent(new Event('change'));
         });
 
         optionsContainer.appendChild(customOption);
     });
 
+    const updatePosition = () => {
+        if (wrapper.classList.contains('open')) {
+            const rect = wrapper.getBoundingClientRect();
+            optionsContainer.style.top = `${rect.bottom + window.scrollY + 4}px`;
+            optionsContainer.style.left = `${rect.left + window.scrollX}px`;
+            optionsContainer.style.width = `${rect.width}px`;
+        }
+    };
+
     trigger.addEventListener('click', function(e) {
         e.stopPropagation();
-        document.querySelectorAll('.custom-select-wrapper').forEach(w => {
+
+        const isOpen = wrapper.classList.contains('open');
+
+        document.querySelectorAll('.custom-select-wrapper.open').forEach(w => {
             if (w !== wrapper) {
                 w.classList.remove('open');
+                w.optionsContainerRef.classList.remove('open');
             }
         });
-        wrapper.classList.toggle('open');
 
-        if (wrapper.classList.contains('open') && select.options.length > 5) {
-            searchInput.value = '';
-            searchInput.dispatchEvent(new Event('input'));
-            setTimeout(() => searchInput.focus(), 100);
+        if (isOpen) {
+            wrapper.classList.remove('open');
+            optionsContainer.classList.remove('open');
+        } else {
+            wrapper.classList.add('open');
+            optionsContainer.classList.add('open');
+            updatePosition();
+
+            const searchInput = optionsContainer.querySelector('.custom-select-search-input');
+            if (searchInput) {
+                searchInput.value = '';
+                searchInput.dispatchEvent(new Event('input'));
+                setTimeout(() => searchInput.focus(), 100);
+            }
         }
     });
 
-    document.addEventListener('click', function() {
-        wrapper.classList.remove('open');
+    document.addEventListener('click', function(e) {
+        if (!wrapper.contains(e.target) && !optionsContainer.contains(e.target)) {
+            wrapper.classList.remove('open');
+            optionsContainer.classList.remove('open');
+        }
     });
+
+    document.addEventListener('scroll', updatePosition, true);
+    window.addEventListener('resize', updatePosition);
 };
 
