@@ -156,29 +156,33 @@ document.addEventListener('DOMContentLoaded', () => {
 
         window.addCheckRow = () => {
             const rowId = Date.now();
+            const selectId = `item-upc-${rowId}`;
+
             let options = '<option value="" disabled selected>Оберіть товар...</option>';
             availableProducts.forEach(p => {
                 const badge = p.promotional_product ? ' (АКЦІЯ)' : '';
                 const formattedPrice = parseFloat(p.selling_price).toFixed(2);
-
                 options += `<option value="${p.upc}" data-max="${p.products_number}">${p.product_name}${badge} - ${formattedPrice}₴ (Залишок: ${p.products_number})</option>`;
             });
 
             const rowHTML = `
                 <div class="check-row" id="row-${rowId}">
-                    <div>
-                        <select class="item-upc" required>${options}</select>
+                    <div style="min-width: 0;">
+                        <select id="${selectId}" class="item-upc" required>${options}</select>
                     </div>
                     <div>
                         <input type="number" class="item-qty" placeholder="К-сть" required min="1" step="1">
                     </div>
-                    <button type="button" class="remove-row-btn" onclick="document.getElementById('row-${rowId}').remove()">
+                    <button type="button" class="remove-row-btn" onclick="document.getElementById('row-${rowId}').remove()" title="Видалити рядок">
                         <i class="fa-solid fa-circle-minus"></i>
                     </button>
                 </div>
             `;
             itemsContainer.insertAdjacentHTML('beforeend', rowHTML);
+
+            setupCustomSelect(selectId);
         };
+
         document.getElementById('btn-add-item').addEventListener('click', addCheckRow);
         document.getElementById('create-check-form').addEventListener('submit', (e) => {
             e.preventDefault();
@@ -197,14 +201,15 @@ document.addEventListener('DOMContentLoaded', () => {
             rows.forEach(row => {
                 const select = row.querySelector('.item-upc');
                 const qtyInput = row.querySelector('.item-qty');
+                const customSelectTrigger = row.querySelector('.custom-select-trigger');
 
-                select.style.borderColor = 'var(--border-color)';
+                if (customSelectTrigger) customSelectTrigger.style.borderColor = 'var(--border-color)';
                 qtyInput.style.borderColor = 'var(--border-color)';
 
                 if (!select.value || !qtyInput.value) {
                     isValid = false;
 
-                    if (!select.value) select.style.borderColor = 'var(--color-rust)';
+                    if (!select.value && customSelectTrigger) customSelectTrigger.style.borderColor = 'var(--color-rust)';
                     if (!qtyInput.value) qtyInput.style.borderColor = 'var(--color-rust)';
 
                     errorText.textContent = "Будь ласка, оберіть товар та вкажіть його кількість для всіх позицій.";

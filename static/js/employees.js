@@ -183,11 +183,9 @@ window.openEditModal = (id) => {
         const parseDateForInput = (val) => {
             if (!val) return '';
             let s = String(val).trim();
-
             if (s.match(/^\d{4}-\d{2}-\d{2}/)) {
                 return s.substring(0, 10);
             }
-
             if (s.match(/^\d{2}[\.\-\/]\d{2}[\.\-\/]\d{4}/)) {
                 let parts = s.split(/[\.\-\/]/);
                 return `${parts[2]}-${parts[1]}-${parts[0]}`;
@@ -266,13 +264,14 @@ window.openEditModal = (id) => {
             body: JSON.stringify(payload)
         })
         .then(async response => {
-            if (response.ok || response.status === 201) {
+            if (response.ok || response.status === 200 || response.status === 201) {
                 showGlobalAlert(editingEmployeeId ? 'Дані працівника успішно оновлено!' : 'Працівника успішно додано!', 'success');
                 toggleModal();
+
                 loadEmployees();
             } else {
                 const errData = await response.json();
-                errorText.textContent = errData.error || errData.detail || 'Невідома помилка при збереженні';
+                errorText.textContent = errData.error || errData.detail || 'Помилка збереження';
                 errorBox.style.display = 'flex';
             }
         })

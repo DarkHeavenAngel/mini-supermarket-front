@@ -153,13 +153,9 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             const idInput = document.getElementById('id_product');
-            let nextId = 1;
-            if (currentProducts.length > 0) {
-                const maxId = Math.max(...currentProducts.map(p => parseInt(p.id_product)));
-                nextId = maxId + 1;
-            }
-            idInput.value = nextId;
-            idInput.disabled = false;
+            idInput.type = 'text';
+            idInput.value = 'Авто';
+            idInput.disabled = true;
 
             toggleModal();
         });
