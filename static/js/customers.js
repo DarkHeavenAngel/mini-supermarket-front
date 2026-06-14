@@ -128,16 +128,9 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('modal-title').textContent = 'Додати клієнта';
         form.reset();
 
-        // генерація ID картки
         const idInput = document.getElementById('card_number');
-        let nextId = "0000000000001";
-
-        if (currentCustomers.length > 0) {
-            const maxId = Math.max(...currentCustomers.map(c => parseInt(c.card_number)));
-            nextId = (maxId + 1).toString().padStart(13, '0');
-        }
-
-        idInput.value = nextId;
+        idInput.type = 'text';
+        idInput.value = 'Авто';
         idInput.disabled = true;
 
         toggleModal();
